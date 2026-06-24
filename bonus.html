@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bonus — Bonnes pratiques & Déploiement pro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><div class="logo-icon">n8n</div><span>Cours n8n</span></a></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Formation</div>
+        <a href="index.html" class="nav-link"><span class="chapter-num">🏠</span> Accueil</a>
+        <a href="chapitre-1.html" class="nav-link"><span class="chapter-num">1</span> Introduction</a>
+        <a href="chapitre-2.html" class="nav-link"><span class="chapter-num">2</span> Installation</a>
+        <a href="chapitre-3.html" class="nav-link"><span class="chapter-num">3</span> Interface</a>
+        <a href="chapitre-4.html" class="nav-link"><span class="chapter-num">4</span> Premier Workflow</a>
+        <a href="chapitre-5.html" class="nav-link"><span class="chapter-num">5</span> Données & Expressions</a>
+        <a href="chapitre-6.html" class="nav-link"><span class="chapter-num">6</span> Marketing</a>
+        <a href="chapitre-7.html" class="nav-link"><span class="chapter-num">7</span> E-commerce</a>
+        <a href="chapitre-8.html" class="nav-link"><span class="chapter-num">8</span> Cybersécurité</a>
+        <a href="chapitre-9.html" class="nav-link"><span class="chapter-num">9</span> Intelligence Artificielle</a>
+        <a href="chapitre-10.html" class="nav-link"><span class="chapter-num">10</span> Projet Final</a>
+        <div class="nav-section-title">Compléments</div>
+        <a href="bonus.html" class="nav-link active"><span class="chapter-num">★</span> Bonus</a>
+      </nav>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="menu-toggle" aria-label="Menu">☰</button><div class="breadcrumb">Bonus / <span>Bonnes pratiques</span></div></div>
+        <div class="topbar-right"><button class="theme-toggle" aria-label="Thème">🌙</button></div>
+      </header>
+      <div class="progress-container"><div class="progress-bar-wrapper"><div class="progress-label"><span class="progress-text">0 / 11</span><span class="progress-percent">0%</span></div><div class="progress-bar"><div class="progress-fill chapter-progress-fill"></div></div></div></div>
+      <main class="page-content">
+        <span class="badge badge-warning">Bonus</span>
+        <h1>Bonnes pratiques & Déploiement professionnel</h1>
+        <p class="lead">Ce chapitre bonus couvre les aspects avancés pour passer d'un usage personnel à une architecture professionnelle de production.</p>
+
+        <h2 id="bonnes-pratiques">Bonnes pratiques générales</h2>
+        <div class="card-grid">
+          <div class="card"><h3>📝 Nommage</h3><ul>
+            <li>Workflows : <code>[Domaine] Action - Description</code></li>
+            <li>Ex: <code>[Marketing] Lead Capture - Facebook to Brevo</code></li>
+            <li>Nœuds : nommer selon leur rôle, pas le type</li>
+          </ul></div>
+          <div class="card"><h3>🧩 Modularité</h3><ul>
+            <li>Découper les gros workflows en sous-workflows</li>
+            <li>Utiliser « Execute Workflow » pour la réutilisation</li>
+            <li>1 workflow = 1 responsabilité</li>
+          </ul></div>
+          <div class="card"><h3>📋 Documentation</h3><ul>
+            <li>Sticky Notes sur le canvas</li>
+            <li>Description du workflow (champ description)</li>
+            <li>Versionner les exports JSON dans Git</li>
+          </ul></div>
+        </div>
+
+        <h2 id="securite">Sécurité</h2>
+        <div class="box box-warning">
+          <div class="box-title">⚠️ Règles de sécurité essentielles</div>
+          <ul>
+            <li><strong>Credentials :</strong> Toujours via le gestionnaire n8n, jamais en dur dans les nœuds</li>
+            <li><strong>Webhooks :</strong> Ajouter une authentification (header secret, basic auth)</li>
+            <li><strong>HTTPS :</strong> Obligatoire en production (reverse proxy Nginx/Caddy)</li>
+            <li><strong>Variables d'environnement :</strong> Pour les secrets au niveau serveur</li>
+            <li><strong>Accès :</strong> Limiter l'accès à l'interface admin (VPN, IP whitelist)</li>
+            <li><strong>Mises à jour :</strong> Maintenir n8n à jour (CVE régulières)</li>
+          </ul>
+        </div>
+        <pre><code><span class="code-comment"># Variables d'environnement recommandées</span>
+N8N_BASIC_AUTH_ACTIVE=true
+N8N_BASIC_AUTH_USER=admin
+N8N_BASIC_AUTH_PASSWORD=mot-de-passe-fort
+N8N_ENCRYPTION_KEY=cle-aleatoire-32-caracteres
+WEBHOOK_URL=https://n8n.votredomaine.com/
+N8N_SECURE_COOKIE=true</code></pre>
+
+        <h2 id="erreurs">Gestion des erreurs</h2>
+        <p>Chaque workflow professionnel doit gérer les erreurs :</p>
+        <div class="schema">
+          <div class="schema-flow">
+            <div class="schema-node trigger">Trigger</div><span class="schema-arrow">→</span>
+            <div class="schema-node action">Action principale</div><span class="schema-arrow">→</span>
+            <div class="schema-node output">Succès</div>
+          </div>
+          <p style="margin:.5rem 0;color:var(--danger);">↓ En cas d'erreur ↓</p>
+          <div class="schema-flow">
+            <div class="schema-node" style="border-color:var(--danger);color:var(--danger);">Error Trigger</div><span class="schema-arrow">→</span>
+            <div class="schema-node action">Log erreur</div><span class="schema-arrow">→</span>
+            <div class="schema-node output">Alerte Slack/Email</div>
+          </div>
+        </div>
+        <ul>
+          <li><strong>Error Trigger :</strong> Workflow séparé qui s'active sur toute erreur</li>
+          <li><strong>Retry :</strong> Configurer les retries sur les nœuds HTTP (Settings → Retry On Fail)</li>
+          <li><strong>Continue On Fail :</strong> Pour les branches non-critiques</li>
+          <li><strong>Timeout :</strong> Définir des timeouts sur les appels API longs</li>
+        </ul>
+
+        <h2 id="logs">Logs & Monitoring</h2>
+        <pre><code><span class="code-comment"># Activer les logs détaillés</span>
+N8N_LOG_LEVEL=info
+N8N_LOG_OUTPUT=console,file
+
+<span class="code-comment"># Monitoring avec healthcheck</span>
+GET https://n8n.votredomaine.com/healthz
+→ Retourne 200 si n8n fonctionne
+
+<span class="code-comment"># Alertes recommandées :</span>
+- Échecs consécutifs > 3 → Slack/PagerDuty
+- Temps d'exécution > 5 min → Warning
+- Espace disque < 20% → Alerte admin</code></pre>
+
+        <h2 id="scalabilite">Scalabilité</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Charge</th><th>Architecture</th><th>Config</th></tr></thead>
+            <tbody>
+              <tr><td>Faible (&lt; 100 exec/jour)</td><td>Instance unique Docker</td><td>1 CPU, 1 GB RAM</td></tr>
+              <tr><td>Moyenne (&lt; 10K exec/jour)</td><td>Docker + queue Redis</td><td>2 CPU, 4 GB RAM</td></tr>
+              <tr><td>Élevée (&gt; 10K exec/jour)</td><td>Mode queue + workers</td><td>Multi-instances</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <pre><code><span class="code-comment"># Mode queue pour la scalabilité</span>
+EXECUTIONS_MODE=queue
+QUEUE_BULL_REDIS_HOST=redis
+QUEUE_BULL_REDIS_PORT=6379</code></pre>
+
+        <h2 id="architecture">Architecture professionnelle</h2>
+        <div class="schema">
+          <p style="font-weight:600;margin-bottom:1rem;">Architecture de production recommandée</p>
+          <div class="schema-flow" style="flex-direction:column;gap:.75rem;">
+            <div class="schema-node">🌐 Internet → Caddy/Nginx (HTTPS, reverse proxy)</div>
+            <div class="schema-arrow" style="transform:rotate(90deg);">→</div>
+            <div class="schema-node">🐳 Docker : n8n (app) + PostgreSQL (DB) + Redis (queue)</div>
+            <div class="schema-arrow" style="transform:rotate(90deg);">→</div>
+            <div class="schema-node">💾 Volumes persistants + Backups automatiques</div>
+          </div>
+        </div>
+
+        <h2 id="deploiement">Déploiement VPS avec Docker</h2>
+        <pre><code><span class="code-comment"># docker-compose.prod.yml</span>
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: n8n
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+
+  n8n:
+    image: n8nio/n8n
+    restart: always
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=n8n
+      - DB_POSTGRESDB_PASSWORD=${DB_PASSWORD}
+      - EXECUTIONS_MODE=queue
+      - QUEUE_BULL_REDIS_HOST=redis
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_HOST=${DOMAIN}
+      - WEBHOOK_URL=https://${DOMAIN}/
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  postgres_data:
+  n8n_data:</code></pre>
+
+        <h2 id="pm2">Alternative PM2 (sans Docker)</h2>
+        <pre><code><span class="code-comment"># ecosystem.config.js</span>
+module.exports = {
+  apps: [{
+    name: 'n8n',
+    script: 'n8n',
+    args: 'start',
+    env: {
+      N8N_PORT: 5678,
+      N8N_BASIC_AUTH_ACTIVE: 'true',
+      WEBHOOK_URL: 'https://n8n.mondomaine.com/'
+    }
+  }]
+};
+
+<span class="code-comment"># Commandes PM2</span>
+pm2 start ecosystem.config.js
+pm2 save
+pm2 startup</code></pre>
+
+        <h2 id="quiz">Quiz</h2>
+        <div class="quiz" data-correct="b" data-explain="EXECUTIONS_MODE=queue avec Redis permet de distribuer les exécutions sur plusieurs workers pour la scalabilité.">
+          <div class="quiz-question">Comment scaler n8n pour des milliers d'exécutions ?</div>
+          <ul class="quiz-options">
+            <li class="quiz-option" data-value="a"><input type="radio" hidden> Augmenter la RAM uniquement</li>
+            <li class="quiz-option" data-value="b"><input type="radio" hidden> Mode queue + Redis + workers</li>
+            <li class="quiz-option" data-value="c"><input type="radio" hidden> Désactiver les logs</li>
+            <li class="quiz-option" data-value="d"><input type="radio" hidden> Utiliser SQLite</li>
+          </ul>
+          <button class="quiz-btn">Vérifier</button>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="summary-box">
+          <h3>📋 Résumé du bonus</h3>
+          <ul>
+            <li>Nommer, documenter et versionner vos workflows</li>
+            <li>Sécuriser : HTTPS, auth, credentials, encryption key</li>
+            <li>Gérer les erreurs avec Error Trigger et retries</li>
+            <li>Monitorer avec healthcheck et alertes</li>
+            <li>Scaler avec mode queue + PostgreSQL + Redis</li>
+            <li>Déployer avec Docker Compose sur VPS</li>
+          </ul>
+        </div>
+
+        <button class="btn btn-primary btn-complete-chapter" style="margin-top:1rem;">Marquer comme complété</button>
+        <nav class="chapter-nav">
+          <a href="chapitre-10.html" class="btn btn-outline">← Module 10</a>
+          <a href="index.html" class="btn btn-primary">Retour à l'accueil →</a>
+        </nav>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

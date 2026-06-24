@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 9 — Intelligence Artificielle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><div class="logo-icon">n8n</div><span>Cours n8n</span></a></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Formation</div>
+        <a href="index.html" class="nav-link"><span class="chapter-num">🏠</span> Accueil</a>
+        <a href="chapitre-1.html" class="nav-link"><span class="chapter-num">1</span> Introduction</a>
+        <a href="chapitre-2.html" class="nav-link"><span class="chapter-num">2</span> Installation</a>
+        <a href="chapitre-3.html" class="nav-link"><span class="chapter-num">3</span> Interface</a>
+        <a href="chapitre-4.html" class="nav-link"><span class="chapter-num">4</span> Premier Workflow</a>
+        <a href="chapitre-5.html" class="nav-link"><span class="chapter-num">5</span> Données & Expressions</a>
+        <a href="chapitre-6.html" class="nav-link"><span class="chapter-num">6</span> Marketing</a>
+        <a href="chapitre-7.html" class="nav-link"><span class="chapter-num">7</span> E-commerce</a>
+        <a href="chapitre-8.html" class="nav-link"><span class="chapter-num">8</span> Cybersécurité</a>
+        <a href="chapitre-9.html" class="nav-link active"><span class="chapter-num">9</span> Intelligence Artificielle</a>
+        <a href="chapitre-10.html" class="nav-link"><span class="chapter-num">10</span> Projet Final</a>
+        <div class="nav-section-title">Compléments</div>
+        <a href="bonus.html" class="nav-link"><span class="chapter-num">★</span> Bonus</a>
+      </nav>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="menu-toggle" aria-label="Menu">☰</button><div class="breadcrumb">Module 9 / <span>Intelligence Artificielle</span></div></div>
+        <div class="topbar-right"><button class="theme-toggle" aria-label="Thème">🌙</button></div>
+      </header>
+      <div class="progress-container"><div class="progress-bar-wrapper"><div class="progress-label"><span class="progress-text">0 / 11</span><span class="progress-percent">0%</span></div><div class="progress-bar"><div class="progress-fill chapter-progress-fill"></div></div></div></div>
+      <main class="page-content">
+        <span class="badge badge-accent">Module 9</span>
+        <h1>n8n + Intelligence Artificielle</h1>
+        <p class="lead">Combinez la puissance de l'IA générative avec n8n pour créer des chatbots, analyser du texte et automatiser des tâches intelligentes.</p>
+
+        <h2>Modèles IA disponibles dans n8n</h2>
+        <div class="card-grid">
+          <div class="card"><h3>🤖 OpenAI</h3><p>GPT-4, GPT-3.5. Nœud natif. Idéal pour chatbots et génération de texte.</p></div>
+          <div class="card"><h3>🧠 Claude (Anthropic)</h3><p>Via HTTP Request ou nœud AI Agent. Excellent pour l'analyse longue.</p></div>
+          <div class="card"><h3>🇫🇷 Mistral</h3><p>Modèle français. API compatible OpenAI. Bon rapport qualité/prix.</p></div>
+          <div class="card"><h3>✨ Gemini (Google)</h3><p>Multimodal. Analyse texte + images. Nœud Google AI.</p></div>
+        </div>
+
+        <h2>Projet 1 : Chatbot FAQ</h2>
+        <div class="schema">
+          <div class="schema-flow">
+            <div class="schema-node trigger">Question utilisateur</div><span class="schema-arrow">→</span>
+            <div class="schema-node transform">n8n Webhook</div><span class="schema-arrow">→</span>
+            <div class="schema-node action">OpenAI GPT</div><span class="schema-arrow">→</span>
+            <div class="schema-node output">Réponse JSON</div>
+          </div>
+        </div>
+        <pre><code><span class="code-comment">// Nœud OpenAI — Chat</span>
+Model: gpt-4o-mini
+System Prompt: Tu es un assistant FAQ pour notre entreprise.
+  Voici notre documentation : [coller FAQ ici]
+  Réponds uniquement en te basant sur cette documentation.
+  Si tu ne sais pas, dis "Je ne peux pas répondre à cette question."
+
+User Message: {{ $json.body.question }}</code></pre>
+
+        <h2>Projet 2 : Analyse de sentiment</h2>
+        <pre><code><span class="code-comment">// Nœud OpenAI</span>
+System Prompt: Analyse le sentiment du texte suivant.
+  Réponds UNIQUEMENT en JSON : {"sentiment": "positif|negatif|neutre", "score": 0-100, "resume": "..."}
+
+User Message: {{ $json.text }}</code></pre>
+
+        <h2>Projet 3 : Résumé automatique</h2>
+        <pre><code><span class="code-comment">// Nœud OpenAI</span>
+System Prompt: Résume le texte suivant en 3 points clés maximum.
+  Sois concis et factuel.
+
+User Message: {{ $json.article }}</code></pre>
+
+        <h2>Projet 4 : Classification automatique</h2>
+        <pre><code><span class="code-comment">// Nœud OpenAI</span>
+System Prompt: Classifie cet email dans UNE catégorie :
+  - support technique
+  - facturation
+  - commercial
+  - spam
+  Réponds en JSON : {"category": "...", "confidence": 0-100}
+
+User Message: Objet: {{ $json.subject }}
+  Corps: {{ $json.body }}</code></pre>
+
+        <h2>Utiliser Mistral (API compatible OpenAI)</h2>
+        <pre><code><span class="code-comment">// Nœud HTTP Request (compatible OpenAI)</span>
+POST https://api.mistral.ai/v1/chat/completions
+Headers:
+  Authorization: Bearer {{ $credentials.mistralApiKey }}
+  Content-Type: application/json
+Body: {
+  "model": "mistral-small-latest",
+  "messages": [
+    {"role": "system", "content": "Tu es un assistant utile."},
+    {"role": "user", "content": "{{ $json.question }}"}
+  ]
+}</code></pre>
+
+        <h2 id="exercices">Exercices pratiques</h2>
+
+        <div class="box box-exercise">
+          <div class="box-title">📝 Exercice 1 — Chatbot FAQ simple</div>
+          <ol>
+            <li>Créez : Webhook → OpenAI → Respond to Webhook</li>
+            <li>Configurez un system prompt avec 5 questions/réponses de votre choix</li>
+            <li>Testez avec : <code>curl -X POST .../webhook/faq -d '{"question":"Quels sont vos horaires ?"}'</code></li>
+          </ol>
+        </div>
+
+        <div class="box box-exercise">
+          <div class="box-title">📝 Exercice 2 — Classifier des emails</div>
+          <ol>
+            <li>Webhook reçoit <code>{"subject":"...", "body":"..."}</code></li>
+            <li>OpenAI classifie l'email</li>
+            <li>IF category = "support" → créer ticket (HTTP Request simulé)</li>
+            <li>IF category = "spam" → ignorer</li>
+            <li>Sinon → notifier l'équipe commerciale</li>
+          </ol>
+        </div>
+
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header">✅ Correction Exercice 2<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <p>Après OpenAI, ajoutez un nœud <strong>Code</strong> pour parser le JSON :</p>
+              <pre><code>const response = JSON.parse($json.message.content);
+return [{ json: { ...response, original: $('Webhook').item.json.body } }];</code></pre>
+              <p>Puis un nœud <strong>Switch</strong> sur <code>{{ $json.category }}</code> avec 4 branches.</p>
+            </div></div>
+          </div>
+        </div>
+
+        <h2 id="quiz">Quiz</h2>
+        <div class="quiz" data-correct="a" data-explain="Le system prompt définit le comportement, le rôle et les contraintes du modèle IA.">
+          <div class="quiz-question">Quel paramètre contrôle le comportement de l'IA ?</div>
+          <ul class="quiz-options">
+            <li class="quiz-option" data-value="a"><input type="radio" hidden> System Prompt</li>
+            <li class="quiz-option" data-value="b"><input type="radio" hidden> Webhook URL</li>
+            <li class="quiz-option" data-value="c"><input type="radio" hidden> Port 5678</li>
+            <li class="quiz-option" data-value="d"><input type="radio" hidden> Docker Image</li>
+          </ul>
+          <button class="quiz-btn">Vérifier</button>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="box box-tip"><div class="box-title">💡 Bonnes pratiques IA</div>
+          <ul><li>Toujours demander une réponse JSON structurée pour faciliter le parsing</li><li>Limiter le contexte (tokens) pour réduire les coûts</li><li>Utiliser gpt-4o-mini pour les tâches simples (moins cher)</li><li>Tester les prompts avant de déployer en production</li><li>Prévoir un fallback si l'IA ne répond pas correctement</li></ul>
+        </div>
+
+        <div class="summary-box"><h3>📋 Résumé</h3>
+          <ul><li>n8n intègre OpenAI, Mistral, Gemini nativement ou via HTTP</li><li>System prompt = clé du comportement IA</li><li>Cas d'usage : FAQ, sentiment, résumé, classification</li><li>Combiner IA + IF/Switch pour des workflows intelligents</li></ul>
+        </div>
+
+        <button class="btn btn-primary btn-complete-chapter" style="margin-top:1rem;">Marquer comme complété</button>
+        <nav class="chapter-nav">
+          <a href="chapitre-8.html" class="btn btn-outline">← Module 8</a>
+          <a href="chapitre-10.html" class="btn btn-primary">Module 10 : Projet Final →</a>
+        </nav>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

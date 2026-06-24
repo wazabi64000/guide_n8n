@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 10 — Projet Final</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><div class="logo-icon">n8n</div><span>Cours n8n</span></a></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Formation</div>
+        <a href="index.html" class="nav-link"><span class="chapter-num">🏠</span> Accueil</a>
+        <a href="chapitre-1.html" class="nav-link"><span class="chapter-num">1</span> Introduction</a>
+        <a href="chapitre-2.html" class="nav-link"><span class="chapter-num">2</span> Installation</a>
+        <a href="chapitre-3.html" class="nav-link"><span class="chapter-num">3</span> Interface</a>
+        <a href="chapitre-4.html" class="nav-link"><span class="chapter-num">4</span> Premier Workflow</a>
+        <a href="chapitre-5.html" class="nav-link"><span class="chapter-num">5</span> Données & Expressions</a>
+        <a href="chapitre-6.html" class="nav-link"><span class="chapter-num">6</span> Marketing</a>
+        <a href="chapitre-7.html" class="nav-link"><span class="chapter-num">7</span> E-commerce</a>
+        <a href="chapitre-8.html" class="nav-link"><span class="chapter-num">8</span> Cybersécurité</a>
+        <a href="chapitre-9.html" class="nav-link"><span class="chapter-num">9</span> Intelligence Artificielle</a>
+        <a href="chapitre-10.html" class="nav-link active"><span class="chapter-num">10</span> Projet Final</a>
+        <div class="nav-section-title">Compléments</div>
+        <a href="bonus.html" class="nav-link"><span class="chapter-num">★</span> Bonus</a>
+      </nav>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="menu-toggle" aria-label="Menu">☰</button><div class="breadcrumb">Module 10 / <span>Projet Final</span></div></div>
+        <div class="topbar-right"><button class="theme-toggle" aria-label="Thème">🌙</button></div>
+      </header>
+      <div class="progress-container"><div class="progress-bar-wrapper"><div class="progress-label"><span class="progress-text">0 / 11</span><span class="progress-percent">0%</span></div><div class="progress-bar"><div class="progress-fill chapter-progress-fill"></div></div></div></div>
+      <main class="page-content">
+        <span class="badge badge-accent">Module 10 — Projet Final</span>
+        <h1>Plateforme d'audit automatisé</h1>
+        <p class="lead">Projet capstone : construisez une plateforme complète qui analyse la sécurité d'un site web en combinant tous les outils vus dans le cours.</p>
+
+        <div class="schema">
+          <div class="schema-flow" style="flex-wrap:wrap;">
+            <div class="schema-node trigger">Utilisateur<br><small>Entre URL</small></div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node transform">n8n<br><small>Orchestrateur</small></div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node action">Analyses<br><small>5 outils</small></div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node output">Rapport<br><small>Consolidé</small></div>
+          </div>
+        </div>
+
+        <h2>Architecture du projet</h2>
+        <p>L'utilisateur soumet une URL via un formulaire web. n8n lance <strong>5 analyses en parallèle</strong>, puis compile un rapport final.</p>
+
+        <div class="card-grid">
+          <div class="card"><h3>🦠 VirusTotal</h3><p>Analyse de réputation de l'URL (malware, phishing)</p></div>
+          <div class="card"><h3>🔍 OWASP ZAP</h3><p>Scan de vulnérabilités web (XSS, SQLi, etc.)</p></div>
+          <div class="card"><h3>💡 Lighthouse</h3><p>Performance, accessibilité, SEO, bonnes pratiques</p></div>
+          <div class="card"><h3>🛡️ Mozilla Observatory</h3><p>Score de sécurité HTTP (headers, TLS, CSP)</p></div>
+          <div class="card"><h3>🔒 Security Headers</h3><p>Analyse des en-têtes de sécurité HTTP</p></div>
+        </div>
+
+        <h2>Workflow principal</h2>
+
+        <h3>Étape 1 — Réception de l'URL</h3>
+        <pre><code><span class="code-comment">// Webhook POST /audit</span>
+Input: { "url": "https://example.com" }
+
+<span class="code-comment">// Set — Normaliser l'URL</span>
+targetUrl  → {{ $json.body.url }}
+auditId    → {{ $now.toMillis() }}
+startedAt  → {{ $now.toISO() }}</code></pre>
+
+        <h3>Étape 2 — Analyses en parallèle</h3>
+        <p>Utilisez un nœud qui split les branches (le webhook alimente 5 branches simultanées) :</p>
+
+        <div class="accordion">
+          <div class="accordion-item open">
+            <button class="accordion-header">Branche 1 — VirusTotal<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <pre><code>POST https://www.virustotal.com/api/v3/urls
+Body: url={{ $json.targetUrl }}
+→ Extraire: malicious, suspicious, harmless counts
+→ Score: {{ malicious / (malicious + harmless) * 100 }}</code></pre>
+            </div></div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">Branche 2 — Security Headers<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <pre><code>GET https://securityheaders.com/?q={{ $json.targetUrl }}&followRedirects=on
+→ Parser le grade (A+, A, B, C, F)
+→ Lister les headers manquants</code></pre>
+            </div></div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">Branche 3 — Mozilla Observatory<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <pre><code>POST https://observatory-api.mdn.mozilla.net/api/v2/scan?host={{ domain }}
+→ Récupérer le score (0-100)
+→ Lister les tests échoués</code></pre>
+            </div></div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">Branche 4 — Lighthouse (via API)<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <pre><code>GET https://www.googleapis.com/pagespeedonline/v5/runPagespeed
+  ?url={{ $json.targetUrl }}&category=PERFORMANCE&category=SEO
+→ Scores: performance, accessibility, best-practices, seo</code></pre>
+            </div></div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">Branche 5 — OWASP ZAP<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <pre><code>POST ZAP API → scan URL
+→ Wait 120s
+→ GET alerts (High, Medium, Low)
+→ Compter par sévérité</code></pre>
+            </div></div>
+          </div>
+        </div>
+
+        <h3>Étape 3 — Merge et rapport final</h3>
+        <pre><code><span class="code-comment">// Nœud Merge — Combiner les 5 branches</span>
+<span class="code-comment">// Nœud Code — Générer le rapport</span>
+const report = {
+  auditId: $('Set').item.json.auditId,
+  url: $('Set').item.json.targetUrl,
+  date: new Date().toISOString(),
+  scores: {
+    virusTotal: items[0].json.vtScore,
+    securityHeaders: items[1].json.grade,
+    observatory: items[2].json.obsScore,
+    lighthouse: items[3].json.performance,
+    zap: items[4].json.alertCount
+  },
+  globalScore: calculateGlobal(items),
+  recommendations: generateRecommendations(items)
+};
+return [{ json: report }];</code></pre>
+
+        <h3>Étape 4 — Livraison du rapport</h3>
+        <pre><code><span class="code-comment">// Options de livraison :</span>
+1. Respond to Webhook → JSON au client
+2. Email → Rapport HTML formaté
+3. Slack → Résumé avec score global
+4. Google Docs → Rapport PDF archivé</code></pre>
+
+        <h2>Interface utilisateur (formulaire HTML)</h2>
+        <p>Créez une page HTML simple qui appelle votre webhook :</p>
+        <pre><code>&lt;form id="auditForm"&gt;
+  &lt;input type="url" id="url" placeholder="https://example.com" required&gt;
+  &lt;button type="submit"&gt;Lancer l'audit&lt;/button&gt;
+&lt;/form&gt;
+&lt;div id="result"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+document.getElementById('auditForm').addEventListener('submit', async (e) =&gt; {
+  e.preventDefault();
+  const url = document.getElementById('url').value;
+  const res = await fetch('http://localhost:5678/webhook/audit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url })
+  });
+  const report = await res.json();
+  document.getElementById('result').innerHTML =
+    `&lt;h3&gt;Score global : ${report.globalScore}/100&lt;/h3&gt;
+     &lt;pre&gt;${JSON.stringify(report, null, 2)}&lt;/pre&gt;`;
+});
+&lt;/script&gt;</code></pre>
+
+        <h2 id="exercice">Exercice — Construire le projet</h2>
+        <div class="box box-exercise">
+          <div class="box-title">📝 Projet Final — Étapes</div>
+          <ol>
+            <li>Créez le workflow webhook avec normalisation URL</li>
+            <li>Implémentez au minimum 2 branches d'analyse (VirusTotal + Security Headers)</li>
+            <li>Mergez les résultats dans un rapport JSON</li>
+            <li>Calculez un score global (moyenne pondérée)</li>
+            <li>Renvoyez le rapport via Respond to Webhook</li>
+            <li>Créez le formulaire HTML et testez end-to-end</li>
+            <li>(Bonus) Ajoutez OpenAI pour générer des recommandations en langage naturel</li>
+            <li>(Bonus) Envoyez le rapport par email</li>
+          </ol>
+        </div>
+
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header">✅ Exemple de rapport final<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <pre><code>{
+  "auditId": "1719062400000",
+  "url": "https://example.com",
+  "date": "2026-06-22T15:00:00.000Z",
+  "scores": {
+    "virusTotal": { "malicious": 0, "verdict": "CLEAN" },
+    "securityHeaders": { "grade": "B", "missing": ["CSP", "HSTS"] },
+    "observatory": { "score": 75 },
+    "lighthouse": { "performance": 82, "seo": 91 },
+    "zap": { "high": 0, "medium": 2, "low": 5 }
+  },
+  "globalScore": 78,
+  "recommendations": [
+    "Ajouter Content-Security-Policy header",
+    "Activer HSTS",
+    "Corriger 2 vulnérabilités medium détectées par ZAP"
+  ]
+}</code></pre>
+            </div></div>
+          </div>
+        </div>
+
+        <h2 id="quiz">Quiz final</h2>
+        <div class="quiz" data-correct="c" data-explain="Le nœud Merge permet de combiner les résultats de plusieurs branches parallèles en un seul flux.">
+          <div class="quiz-question">Comment combiner 5 analyses parallèles dans n8n ?</div>
+          <ul class="quiz-options">
+            <li class="quiz-option" data-value="a"><input type="radio" hidden> 5 webhooks séparés</li>
+            <li class="quiz-option" data-value="b"><input type="radio" hidden> Un seul nœud Set</li>
+            <li class="quiz-option" data-value="c"><input type="radio" hidden> Branches parallèles + Merge</li>
+            <li class="quiz-option" data-value="d"><input type="radio" hidden> 5 workflows distincts</li>
+          </ul>
+          <button class="quiz-btn">Vérifier</button>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="summary-box">
+          <h3>🏆 Félicitations !</h3>
+          <p>Vous avez parcouru l'intégralité du cours n8n. Vous savez maintenant :</p>
+          <ul>
+            <li>Installer et configurer n8n</li>
+            <li>Créer des workflows avec webhooks, transformations et API</li>
+            <li>Automatiser le marketing, l'e-commerce et la cybersécurité</li>
+            <li>Intégrer l'IA dans vos automatisations</li>
+            <li>Construire un projet d'audit multi-outils</li>
+          </ul>
+        </div>
+
+        <button class="btn btn-primary btn-complete-chapter" style="margin-top:1rem;">Marquer comme complété</button>
+        <nav class="chapter-nav">
+          <a href="chapitre-9.html" class="btn btn-outline">← Module 9</a>
+          <a href="bonus.html" class="btn btn-primary">Bonus : Bonnes pratiques →</a>
+        </nav>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

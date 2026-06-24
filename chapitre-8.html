@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 8 — Cybersécurité</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><div class="logo-icon">n8n</div><span>Cours n8n</span></a></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Formation</div>
+        <a href="index.html" class="nav-link"><span class="chapter-num">🏠</span> Accueil</a>
+        <a href="chapitre-1.html" class="nav-link"><span class="chapter-num">1</span> Introduction</a>
+        <a href="chapitre-2.html" class="nav-link"><span class="chapter-num">2</span> Installation</a>
+        <a href="chapitre-3.html" class="nav-link"><span class="chapter-num">3</span> Interface</a>
+        <a href="chapitre-4.html" class="nav-link"><span class="chapter-num">4</span> Premier Workflow</a>
+        <a href="chapitre-5.html" class="nav-link"><span class="chapter-num">5</span> Données & Expressions</a>
+        <a href="chapitre-6.html" class="nav-link"><span class="chapter-num">6</span> Marketing</a>
+        <a href="chapitre-7.html" class="nav-link"><span class="chapter-num">7</span> E-commerce</a>
+        <a href="chapitre-8.html" class="nav-link active"><span class="chapter-num">8</span> Cybersécurité</a>
+        <a href="chapitre-9.html" class="nav-link"><span class="chapter-num">9</span> Intelligence Artificielle</a>
+        <a href="chapitre-10.html" class="nav-link"><span class="chapter-num">10</span> Projet Final</a>
+        <div class="nav-section-title">Compléments</div>
+        <a href="bonus.html" class="nav-link"><span class="chapter-num">★</span> Bonus</a>
+      </nav>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="menu-toggle" aria-label="Menu">☰</button><div class="breadcrumb">Module 8 / <span>Cybersécurité</span></div></div>
+        <div class="topbar-right"><button class="theme-toggle" aria-label="Thème">🌙</button></div>
+      </header>
+      <div class="progress-container"><div class="progress-bar-wrapper"><div class="progress-label"><span class="progress-text">0 / 11</span><span class="progress-percent">0%</span></div><div class="progress-bar"><div class="progress-fill chapter-progress-fill"></div></div></div></div>
+      <main class="page-content">
+        <span class="badge badge-accent">Module 8</span>
+        <h1>Automatisation Cybersécurité</h1>
+        <p class="lead">Découvrez comment automatiser des contrôles de sécurité avec n8n : analyse d'URL, scan de domaines et vérification d'adresses IP.</p>
+
+        <h2>Pourquoi automatiser la cybersécurité ?</h2>
+        <p>Les analystes sécurité passent beaucoup de temps sur des vérifications répétitives. n8n permet d'automatiser :</p>
+        <ul>
+          <li>L'analyse d'URLs suspectes (phishing, malware)</li>
+          <li>Le scan de vulnérabilités web</li>
+          <li>La vérification de réputation IP</li>
+          <li>La génération de rapports consolidés</li>
+        </ul>
+
+        <h2>Projet 1 : Analyse d'URL avec VirusTotal</h2>
+        <div class="schema">
+          <div class="schema-flow">
+            <div class="schema-node trigger">URL soumise</div><span class="schema-arrow">→</span>
+            <div class="schema-node transform">n8n</div><span class="schema-arrow">→</span>
+            <div class="schema-node action">VirusTotal API</div><span class="schema-arrow">→</span>
+            <div class="schema-node output">Rapport</div>
+          </div>
+        </div>
+        <pre><code><span class="code-comment">// Nœud HTTP Request — VirusTotal</span>
+Method: POST
+URL: https://www.virustotal.com/api/v3/urls
+Headers:
+  x-apikey: {{ $credentials.virusTotalApi }}
+Body (form-urlencoded):
+  url: {{ $json.url }}
+
+<span class="code-comment">// Puis GET pour récupérer le rapport :</span>
+URL: https://www.virustotal.com/api/v3/analyses/{{ $json.data.id }}</code></pre>
+
+        <h2>Projet 2 : Scan de domaine avec OWASP ZAP</h2>
+        <div class="schema">
+          <div class="schema-flow">
+            <div class="schema-node trigger">Domaine</div><span class="schema-arrow">→</span>
+            <div class="schema-node transform">n8n</div><span class="schema-arrow">→</span>
+            <div class="schema-node action">OWASP ZAP API</div><span class="schema-arrow">→</span>
+            <div class="schema-node output">Rapport PDF</div>
+          </div>
+        </div>
+        <pre><code><span class="code-comment">// 1. Lancer le scan ZAP</span>
+POST http://zap-server:8080/JSON/ascan/action/scan/
+  ?url={{ $json.domain }}&recurse=true
+
+<span class="code-comment">// 2. Attendre (nœud Wait — 60 secondes)</span>
+
+<span class="code-comment">// 3. Récupérer les alertes</span>
+GET http://zap-server:8080/JSON/core/view/alerts/
+  ?baseurl={{ $json.domain }}
+
+<span class="code-comment">// 4. Générer le rapport HTML/PDF</span>
+GET http://zap-server:8080/OTHER/core/other/htmlreport/</code></pre>
+
+        <h2>Projet 3 : Score IP avec AbuseIPDB</h2>
+        <div class="schema">
+          <div class="schema-flow">
+            <div class="schema-node trigger">Adresse IP</div><span class="schema-arrow">→</span>
+            <div class="schema-node transform">n8n</div><span class="schema-arrow">→</span>
+            <div class="schema-node action">AbuseIPDB</div><span class="schema-arrow">→</span>
+            <div class="schema-node output">Score</div>
+          </div>
+        </div>
+        <pre><code><span class="code-comment">// Nœud HTTP Request — AbuseIPDB</span>
+GET https://api.abuseipdb.com/api/v2/check
+Headers:
+  Key: {{ $credentials.abuseIpDbKey }}
+  Accept: application/json
+Query:
+  ipAddress: {{ $json.ip }}
+  maxAgeInDays: 90
+
+<span class="code-comment">// Résultat :</span>
+abuseScore → {{ $json.data.abuseConfidenceScore }}  <span class="code-comment">// 0-100</span>
+country    → {{ $json.data.countryCode }}
+isp        → {{ $json.data.isp }}</code></pre>
+
+        <h2 id="exercices">Exercices pratiques</h2>
+
+        <div class="box box-exercise">
+          <div class="box-title">📝 Exercice 1 — Scanner une URL</div>
+          <ol>
+            <li>Créez un workflow : Webhook → VirusTotal → Set (formater) → Respond</li>
+            <li>Le webhook reçoit <code>{"url": "https://example.com"}</code></li>
+            <li>Formatez la réponse : score, nombre de détections, verdict</li>
+            <li>Renvoyez un JSON avec <code>safe: true/false</code> (safe si détections &lt; 3)</li>
+          </ol>
+        </div>
+
+        <div class="box box-exercise">
+          <div class="box-title">📝 Exercice 2 — Vérifier une IP</div>
+          <ol>
+            <li>Workflow : Webhook → AbuseIPDB → IF (score > 50) → Slack alerte</li>
+            <li>Si score > 50 : envoyer alerte « IP suspecte » sur Slack</li>
+            <li>Sinon : logger « IP propre » dans un fichier/réponse</li>
+          </ol>
+        </div>
+
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header">✅ Correction Exercice 1<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <pre><code><span class="code-comment">// Nœud Set — Formater résultat VirusTotal</span>
+url         → {{ $('Webhook').item.json.body.url }}
+detections  → {{ $json.data.attributes.last_analysis_stats.malicious }}
+total       → {{ $json.data.attributes.last_analysis_stats }}
+safe        → {{ $json.data.attributes.last_analysis_stats.malicious < 3 }}
+verdict     → {{ $json.data.attributes.last_analysis_stats.malicious < 3 ? "SAFE" : "DANGER" }}</code></pre>
+            </div></div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">✅ Correction Exercice 2<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <p><strong>IF :</strong> <code>{{ $json.data.abuseConfidenceScore > 50 }}</code></p>
+              <p><strong>True :</strong> Slack → <code>🚨 IP suspecte : {{ $json.ip }} — Score: {{ $json.data.abuseConfidenceScore }}%</code></p>
+              <p><strong>False :</strong> Respond → <code>{"status": "clean", "ip": "...", "score": 0}</code></p>
+            </div></div>
+          </div>
+        </div>
+
+        <h2 id="quiz">Quiz</h2>
+        <div class="quiz" data-correct="b" data-explain="AbuseIPDB retourne un score de confiance d'abus de 0 à 100 pour évaluer la réputation d'une IP.">
+          <div class="quiz-question">Que mesure AbuseIPDB ?</div>
+          <ul class="quiz-options">
+            <li class="quiz-option" data-value="a"><input type="radio" hidden> La vitesse de connexion</li>
+            <li class="quiz-option" data-value="b"><input type="radio" hidden> La réputation/abus d'une IP</li>
+            <li class="quiz-option" data-value="c"><input type="radio" hidden> Le prix d'un domaine</li>
+            <li class="quiz-option" data-value="d"><input type="radio" hidden> La taille d'un fichier</li>
+          </ul>
+          <button class="quiz-btn">Vérifier</button>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="box box-warning"><div class="box-title">⚠️ Sécurité</div>
+          <ul><li>Ne jamais exposer vos clés API dans les workflows (utilisez Credentials)</li><li>Limiter l'accès aux webhooks de sécurité (authentification)</li><li>Respecter les limites de taux (rate limits) des APIs</li><li>Ne scannez que des ressources dont vous êtes propriétaire</li></ul>
+        </div>
+
+        <div class="summary-box"><h3>📋 Résumé</h3>
+          <ul><li>VirusTotal pour analyser les URLs et fichiers</li><li>OWASP ZAP pour scanner les vulnérabilités web</li><li>AbuseIPDB pour vérifier la réputation des IP</li><li>n8n orchestre ces outils et génère des rapports unifiés</li></ul>
+        </div>
+
+        <button class="btn btn-primary btn-complete-chapter" style="margin-top:1rem;">Marquer comme complété</button>
+        <nav class="chapter-nav">
+          <a href="chapitre-7.html" class="btn btn-outline">← Module 7</a>
+          <a href="chapitre-9.html" class="btn btn-primary">Module 9 : IA →</a>
+        </nav>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

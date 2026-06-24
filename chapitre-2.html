@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 2 — Installation de n8n</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><div class="logo-icon">n8n</div><span>Cours n8n</span></a></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Formation</div>
+        <a href="index.html" class="nav-link"><span class="chapter-num">🏠</span> Accueil</a>
+        <a href="chapitre-1.html" class="nav-link"><span class="chapter-num">1</span> Introduction</a>
+        <a href="chapitre-2.html" class="nav-link active"><span class="chapter-num">2</span> Installation</a>
+        <a href="chapitre-3.html" class="nav-link"><span class="chapter-num">3</span> Interface</a>
+        <a href="chapitre-4.html" class="nav-link"><span class="chapter-num">4</span> Premier Workflow</a>
+        <a href="chapitre-5.html" class="nav-link"><span class="chapter-num">5</span> Données & Expressions</a>
+        <a href="chapitre-6.html" class="nav-link"><span class="chapter-num">6</span> Marketing</a>
+        <a href="chapitre-7.html" class="nav-link"><span class="chapter-num">7</span> E-commerce</a>
+        <a href="chapitre-8.html" class="nav-link"><span class="chapter-num">8</span> Cybersécurité</a>
+        <a href="chapitre-9.html" class="nav-link"><span class="chapter-num">9</span> Intelligence Artificielle</a>
+        <a href="chapitre-10.html" class="nav-link"><span class="chapter-num">10</span> Projet Final</a>
+        <div class="nav-section-title">Compléments</div>
+        <a href="bonus.html" class="nav-link"><span class="chapter-num">★</span> Bonus</a>
+      </nav>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="menu-toggle" aria-label="Menu">☰</button><div class="breadcrumb">Module 2 / <span>Installation</span></div></div>
+        <div class="topbar-right"><button class="theme-toggle" aria-label="Thème">🌙</button></div>
+      </header>
+      <div class="progress-container"><div class="progress-bar-wrapper"><div class="progress-label"><span class="progress-text">0 / 11</span><span class="progress-percent">0%</span></div><div class="progress-bar"><div class="progress-fill chapter-progress-fill"></div></div></div></div>
+      <main class="page-content">
+        <span class="badge badge-accent">Module 2</span>
+        <h1>Installation de n8n</h1>
+        <p class="lead">Plusieurs méthodes existent pour installer n8n. Nous allons les explorer une par une, avec chaque commande expliquée ligne par ligne.</p>
+
+        <h2>Prérequis</h2>
+        <ul>
+          <li><strong>Node.js</strong> version 18 ou supérieure (pour npm/npx)</li>
+          <li><strong>Docker</strong> (optionnel, recommandé en production)</li>
+          <li>Un <strong>serveur Linux</strong> ou VPS pour la production</li>
+        </ul>
+
+        <h2 id="npx">Méthode 1 — npx (test rapide)</h2>
+        <p>La façon la plus rapide de tester n8n sans installation permanente.</p>
+        <pre><code><span class="code-comment"># Lance n8n sans l'installer globalement</span>
+npx n8n
+
+<span class="code-comment"># npx      → exécute un package npm sans installation globale</span>
+<span class="code-comment"># n8n      → nom du package à exécuter</span>
+<span class="code-comment"># Résultat → serveur sur http://localhost:5678</span></code></pre>
+        <div class="box box-tip"><div class="box-title">💡 Pourquoi npx ?</div><p>Idéal pour un premier test. Les données sont stockées dans <code>~/.n8n</code>. Pas recommandé en production.</p></div>
+
+        <h2 id="npm">Méthode 2 — npm (installation globale)</h2>
+        <pre><code><span class="code-comment"># Installe n8n globalement sur votre machine</span>
+npm install n8n -g
+
+<span class="code-comment"># npm install → commande d'installation de packages Node.js</span>
+<span class="code-comment"># n8n        → package à installer</span>
+<span class="code-comment"># -g         → global : accessible depuis n'importe quel terminal</span>
+
+<span class="code-comment"># Puis lancez le serveur :</span>
+n8n start
+
+<span class="code-comment"># n8n start  → démarre le serveur n8n sur le port 5678</span></code></pre>
+
+        <h2 id="docker">Méthode 3 — Docker (recommandée)</h2>
+        <pre><code><span class="code-comment"># Lancement simple avec Docker</span>
+docker run -it --rm \
+  --name n8n \
+  -p 5678:5678 \
+  -v ~/.n8n:/home/node/.n8n \
+  n8nio/n8n
+
+<span class="code-comment"># docker run    → crée et démarre un conteneur</span>
+<span class="code-comment"># -it           → mode interactif avec terminal</span>
+<span class="code-comment"># --rm          → supprime le conteneur à l'arrêt</span>
+<span class="code-comment"># --name n8n    → nomme le conteneur "n8n"</span>
+<span class="code-comment"># -p 5678:5678  → mappe le port 5678 (hôte:conteneur)</span>
+<span class="code-comment"># -v ~/.n8n:... → volume persistant pour les données</span>
+<span class="code-comment"># n8nio/n8n     → image Docker officielle</span></code></pre>
+
+        <h3>Docker Compose (production)</h3>
+        <p>Créez un fichier <code>docker-compose.yml</code> :</p>
+        <pre><code><span class="code-keyword">version:</span> <span class="code-string">'3.8'</span>
+<span class="code-keyword">services:</span>
+  <span class="code-func">n8n</span>:
+    <span class="code-func">image</span>: n8nio/n8n
+    <span class="code-func">restart</span>: always
+    <span class="code-func">ports</span>:
+      - <span class="code-string">"5678:5678"</span>
+    <span class="code-func">environment</span>:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=motdepasse
+      - N8N_HOST=n8n.mondomaine.com
+      - WEBHOOK_URL=https://n8n.mondomaine.com/
+    <span class="code-func">volumes</span>:
+      - n8n_data:/home/node/.n8n
+
+<span class="code-keyword">volumes:</span>
+  <span class="code-func">n8n_data</span>:</code></pre>
+        <pre><code><span class="code-comment"># Démarre les services en arrière-plan</span>
+docker compose up -d
+
+<span class="code-comment"># docker compose → outil de gestion multi-conteneurs</span>
+<span class="code-comment"># up            → crée et démarre les conteneurs</span>
+<span class="code-comment"># -d            → detached : en arrière-plan</span></code></pre>
+
+        <h2 id="systemd">Méthode 4 — systemd (serveur Linux)</h2>
+        <p>Pour un service permanent sur un VPS Linux :</p>
+        <pre><code><span class="code-comment"># /etc/systemd/system/n8n.service</span>
+[Unit]
+Description=n8n workflow automation
+After=network.target
+
+[Service]
+Type=simple
+User=node
+ExecStart=/usr/bin/n8n start
+Restart=on-failure
+Environment=N8N_PORT=5678
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+        <pre><code><span class="code-comment"># Recharge la configuration systemd</span>
+sudo systemctl daemon-reload
+
+<span class="code-comment"># Active n8n au démarrage du serveur</span>
+sudo systemctl enable n8n
+
+<span class="code-comment"># Démarre le service maintenant</span>
+sudo systemctl start n8n
+
+<span class="code-comment"># Vérifie le statut</span>
+sudo systemctl status n8n</code></pre>
+
+        <h2 id="pm2">Méthode 5 — PM2 (process manager Node.js)</h2>
+        <pre><code><span class="code-comment"># Installe PM2 globalement</span>
+npm install pm2 -g
+
+<span class="code-comment"># Démarre n8n avec PM2</span>
+pm2 start n8n --name "n8n"
+
+<span class="code-comment"># pm2 start → lance un processus géré par PM2</span>
+<span class="code-comment"># --name     → nom lisible pour le processus</span>
+
+<span class="code-comment"># Sauvegarde la config pour redémarrage auto</span>
+pm2 save
+pm2 startup</code></pre>
+
+        <h2 id="cloud">n8n Cloud</h2>
+        <p>Si vous ne voulez pas gérer l'infrastructure, <strong>n8n Cloud</strong> (https://n8n.io) héberge tout pour vous. Compte gratuit limité, puis abonnement. Idéal pour débuter sans serveur.</p>
+
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Méthode</th><th>Usage</th><th>Difficulté</th></tr></thead>
+            <tbody>
+              <tr><td>npx</td><td>Test rapide</td><td>⭐ Facile</td></tr>
+              <tr><td>npm -g</td><td>Développement local</td><td>⭐ Facile</td></tr>
+              <tr><td>Docker</td><td>Production</td><td>⭐⭐ Moyen</td></tr>
+              <tr><td>systemd</td><td>VPS Linux</td><td>⭐⭐⭐ Avancé</td></tr>
+              <tr><td>PM2</td><td>Node.js en production</td><td>⭐⭐ Moyen</td></tr>
+              <tr><td>Cloud</td><td>Sans infrastructure</td><td>⭐ Facile</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="exercice">Exercice pratique</h2>
+        <div class="box box-exercise">
+          <div class="box-title">📝 Exercice — Installer n8n en local</div>
+          <ol>
+            <li>Vérifiez Node.js : <code>node --version</code> (doit être ≥ 18)</li>
+            <li>Lancez n8n avec <code>npx n8n</code></li>
+            <li>Ouvrez <code>http://localhost:5678</code> dans votre navigateur</li>
+            <li>Créez votre compte administrateur</li>
+            <li>Arrêtez le serveur avec <code>Ctrl+C</code></li>
+            <li>(Bonus) Relancez avec Docker si installé</li>
+          </ol>
+        </div>
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header">✅ Correction<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <pre><code>node --version    <span class="code-comment"># v20.x.x → OK</span>
+npx n8n           <span class="code-comment"># Démarre le serveur</span>
+<span class="code-comment"># Navigateur → http://localhost:5678</span>
+<span class="code-comment"># Créer compte → email + mot de passe</span>
+<span class="code-comment"># Ctrl+C pour arrêter</span></code></pre>
+              <p>Si le port 5678 est occupé : <code>N8N_PORT=5679 npx n8n</code></p>
+            </div></div>
+          </div>
+        </div>
+
+        <h2 id="quiz">Quiz</h2>
+        <div class="quiz" data-correct="c" data-explain="Docker Compose est la méthode recommandée pour la production car elle gère la persistance, le redémarrage et la configuration.">
+          <div class="quiz-question">Quelle méthode est recommandée pour la production ?</div>
+          <ul class="quiz-options">
+            <li class="quiz-option" data-value="a"><input type="radio" hidden> npx n8n</li>
+            <li class="quiz-option" data-value="b"><input type="radio" hidden> npm install -g</li>
+            <li class="quiz-option" data-value="c"><input type="radio" hidden> Docker Compose</li>
+            <li class="quiz-option" data-value="d"><input type="radio" hidden> Ouvrir index.html</li>
+          </ul>
+          <button class="quiz-btn">Vérifier</button>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="box box-tip"><div class="box-title">💡 Bonnes pratiques</div>
+          <ul><li>Toujours utiliser des volumes Docker pour persister les données</li><li>Activer l'authentification en production (N8N_BASIC_AUTH)</li><li>Configurer WEBHOOK_URL pour que les webhooks fonctionnent</li><li>Utiliser HTTPS avec un reverse proxy (Nginx/Caddy)</li></ul>
+        </div>
+
+        <div class="summary-box"><h3>📋 Résumé</h3>
+          <ul><li>npx pour tester, Docker pour la production</li><li>Le port par défaut est 5678</li><li>Les données sont dans ~/.n8n ou un volume Docker</li><li>PM2 et systemd pour la gestion de processus</li></ul>
+        </div>
+
+        <button class="btn btn-primary btn-complete-chapter" style="margin-top:1rem;">Marquer comme complété</button>
+        <nav class="chapter-nav">
+          <a href="chapitre-1.html" class="btn btn-outline">← Module 1</a>
+          <a href="chapitre-3.html" class="btn btn-primary">Module 3 : Interface →</a>
+        </nav>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 3 — Découverte de l'interface</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><div class="logo-icon">n8n</div><span>Cours n8n</span></a></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Formation</div>
+        <a href="index.html" class="nav-link"><span class="chapter-num">🏠</span> Accueil</a>
+        <a href="chapitre-1.html" class="nav-link"><span class="chapter-num">1</span> Introduction</a>
+        <a href="chapitre-2.html" class="nav-link"><span class="chapter-num">2</span> Installation</a>
+        <a href="chapitre-3.html" class="nav-link active"><span class="chapter-num">3</span> Interface</a>
+        <a href="chapitre-4.html" class="nav-link"><span class="chapter-num">4</span> Premier Workflow</a>
+        <a href="chapitre-5.html" class="nav-link"><span class="chapter-num">5</span> Données & Expressions</a>
+        <a href="chapitre-6.html" class="nav-link"><span class="chapter-num">6</span> Marketing</a>
+        <a href="chapitre-7.html" class="nav-link"><span class="chapter-num">7</span> E-commerce</a>
+        <a href="chapitre-8.html" class="nav-link"><span class="chapter-num">8</span> Cybersécurité</a>
+        <a href="chapitre-9.html" class="nav-link"><span class="chapter-num">9</span> Intelligence Artificielle</a>
+        <a href="chapitre-10.html" class="nav-link"><span class="chapter-num">10</span> Projet Final</a>
+        <div class="nav-section-title">Compléments</div>
+        <a href="bonus.html" class="nav-link"><span class="chapter-num">★</span> Bonus</a>
+      </nav>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="menu-toggle" aria-label="Menu">☰</button><div class="breadcrumb">Module 3 / <span>Interface</span></div></div>
+        <div class="topbar-right"><button class="theme-toggle" aria-label="Thème">🌙</button></div>
+      </header>
+      <div class="progress-container"><div class="progress-bar-wrapper"><div class="progress-label"><span class="progress-text">0 / 11</span><span class="progress-percent">0%</span></div><div class="progress-bar"><div class="progress-fill chapter-progress-fill"></div></div></div></div>
+      <main class="page-content">
+        <span class="badge badge-accent">Module 3</span>
+        <h1>Découverte de l'interface</h1>
+        <p class="lead">Avant de créer des automatisations, familiarisez-vous avec l'interface de n8n. Voici une visite guidée de chaque section.</p>
+
+        <h2>Vue d'ensemble</h2>
+        <div class="mock-ui">
+          <div class="mock-titlebar"><span class="mock-dot red"></span><span class="mock-dot yellow"></span><span class="mock-dot green"></span><span>n8n — localhost:5678</span></div>
+          <div class="mock-body" style="display:flex;gap:1rem;">
+            <div style="width:180px;flex-shrink:0;">
+              <div class="mock-sidebar-item active">🏠 Overview</div>
+              <div class="mock-sidebar-item">⚡ Workflows</div>
+              <div class="mock-sidebar-item">📋 Executions</div>
+              <div class="mock-sidebar-item">🔑 Credentials</div>
+              <div class="mock-sidebar-item">📦 Templates</div>
+            </div>
+            <div style="flex:1;">
+              <p style="font-weight:600;margin-bottom:.5rem;">Bienvenue dans n8n</p>
+              <p style="font-size:.85rem;color:var(--text-muted);">Créez votre premier workflow ou explorez les templates.</p>
+            </div>
+          </div>
+        </div>
+
+        <h2 id="dashboard">Dashboard (Overview)</h2>
+        <p>Page d'accueil après connexion. Affiche :</p>
+        <ul>
+          <li>Statistiques des exécutions récentes (succès/échecs)</li>
+          <li>Accès rapide pour créer un workflow</li>
+          <li>Liens vers la documentation et la communauté</li>
+        </ul>
+
+        <h2 id="workflows">Workflows</h2>
+        <p>Le cœur de n8n. C'est ici que vous créez, modifiez et gérez vos automatisations.</p>
+        <div class="mock-ui">
+          <div class="mock-titlebar"><span class="mock-dot red"></span><span class="mock-dot yellow"></span><span class="mock-dot green"></span><span>Workflow Editor</span></div>
+          <div class="mock-body">
+            <div class="mock-workflow-canvas">
+              <div class="mock-node" style="border-color:var(--success);"><div class="node-icon">⚡</div>Webhook</div>
+              <span style="color:var(--text-muted);">→</span>
+              <div class="mock-node" style="border-color:var(--warning);"><div class="node-icon">✏️</div>Set</div>
+              <span style="color:var(--text-muted);">→</span>
+              <div class="mock-node" style="border-color:var(--info);"><div class="node-icon">📧</div>Email</div>
+            </div>
+            <p style="font-size:.8rem;color:var(--text-muted);margin-top:1rem;text-align:center;">Canvas — Glissez des nœuds, connectez-les, configurez à droite</p>
+          </div>
+        </div>
+        <p><strong>Actions clés :</strong> Nouveau workflow (+), Activer/Désactiver (toggle), Exécuter (▶), Sauvegarder (Ctrl+S)</p>
+
+        <h2 id="executions">Executions</h2>
+        <p>Historique de toutes les exécutions de vos workflows. Pour chaque exécution :</p>
+        <ul>
+          <li>Statut (succès ✅, échec ❌, en cours ⏳)</li>
+          <li>Date et durée</li>
+          <li>Données entrantes/sortantes de chaque nœud</li>
+          <li>Possibilité de relancer (retry)</li>
+        </ul>
+        <div class="box box-tip"><div class="box-title">💡 Astuce debug</div><p>Cliquez sur une exécution échouée pour voir exactement quel nœud a planté et les données à ce moment-là.</p></div>
+
+        <h2 id="credentials">Credentials</h2>
+        <p>Stockage sécurisé de vos identifiants API. Types courants :</p>
+        <div class="card-grid">
+          <div class="card"><h3>API Key</h3><p>Clé simple (ex: VirusTotal, OpenAI)</p></div>
+          <div class="card"><h3>OAuth2</h3><p>Connexion Google, Slack, etc.</p></div>
+          <div class="card"><h3>Basic Auth</h3><p>Login + mot de passe HTTP</p></div>
+        </div>
+        <p>Les credentials sont <strong>chiffrés</strong> et réutilisables dans tous vos workflows.</p>
+
+        <h2 id="templates">Templates</h2>
+        <p>Bibliothèque de workflows pré-construits par la communauté. Parcourez par catégorie (Marketing, IT Ops, Sales…) et importez en un clic pour partir d'une base solide.</p>
+
+        <h2 id="exercice">Exercice pratique</h2>
+        <div class="box box-exercise">
+          <div class="box-title">📝 Exercice — Créer son premier workflow</div>
+          <ol>
+            <li>Connectez-vous à n8n (<code>localhost:5678</code>)</li>
+            <li>Cliquez sur <strong>Workflows</strong> puis <strong>+ Add workflow</strong></li>
+            <li>Cliquez sur <strong>+</strong> pour ajouter un nœud → cherchez « Manual Trigger »</li>
+            <li>Ajoutez un nœud <strong>Set</strong> et connectez-le au trigger</li>
+            <li>Dans Set, ajoutez un champ : <code>message</code> = <code>Bonjour n8n !</code></li>
+            <li>Cliquez <strong>Execute Workflow</strong> (▶)</li>
+            <li>Vérifiez le résultat dans le panneau de droite</li>
+            <li>Sauvegardez avec Ctrl+S et nommez le workflow</li>
+          </ol>
+        </div>
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header">✅ Correction<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <div class="mock-workflow-canvas" style="min-height:120px;">
+                <div class="mock-node" style="border-color:var(--success);"><div class="node-icon">👆</div>Manual Trigger</div>
+                <span>→</span>
+                <div class="mock-node" style="border-color:var(--warning);"><div class="node-icon">✏️</div>Set<br><small>message: Bonjour n8n!</small></div>
+              </div>
+              <p>Résultat attendu dans l'output du nœud Set : <code>{"message": "Bonjour n8n !"}</code></p>
+            </div></div>
+          </div>
+        </div>
+
+        <h2 id="quiz">Quiz</h2>
+        <div class="quiz" data-correct="b" data-explain="L'onglet Executions conserve l'historique de toutes les exécutions avec les données et les erreurs.">
+          <div class="quiz-question">Où consulte-t-on l'historique des exécutions ?</div>
+          <ul class="quiz-options">
+            <li class="quiz-option" data-value="a"><input type="radio" hidden> Credentials</li>
+            <li class="quiz-option" data-value="b"><input type="radio" hidden> Executions</li>
+            <li class="quiz-option" data-value="c"><input type="radio" hidden> Templates</li>
+            <li class="quiz-option" data-value="d"><input type="radio" hidden> Settings</li>
+          </ul>
+          <button class="quiz-btn">Vérifier</button>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="summary-box"><h3>📋 Résumé</h3>
+          <ul><li>Workflows = création et édition des automatisations</li><li>Executions = historique et debug</li><li>Credentials = identifiants sécurisés réutilisables</li><li>Templates = workflows pré-construits</li></ul>
+        </div>
+
+        <button class="btn btn-primary btn-complete-chapter" style="margin-top:1rem;">Marquer comme complété</button>
+        <nav class="chapter-nav">
+          <a href="chapitre-2.html" class="btn btn-outline">← Module 2</a>
+          <a href="chapitre-4.html" class="btn btn-primary">Module 4 : Premier Workflow →</a>
+        </nav>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

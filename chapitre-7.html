@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 7 — E-commerce</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><div class="logo-icon">n8n</div><span>Cours n8n</span></a></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Formation</div>
+        <a href="index.html" class="nav-link"><span class="chapter-num">🏠</span> Accueil</a>
+        <a href="chapitre-1.html" class="nav-link"><span class="chapter-num">1</span> Introduction</a>
+        <a href="chapitre-2.html" class="nav-link"><span class="chapter-num">2</span> Installation</a>
+        <a href="chapitre-3.html" class="nav-link"><span class="chapter-num">3</span> Interface</a>
+        <a href="chapitre-4.html" class="nav-link"><span class="chapter-num">4</span> Premier Workflow</a>
+        <a href="chapitre-5.html" class="nav-link"><span class="chapter-num">5</span> Données & Expressions</a>
+        <a href="chapitre-6.html" class="nav-link"><span class="chapter-num">6</span> Marketing</a>
+        <a href="chapitre-7.html" class="nav-link active"><span class="chapter-num">7</span> E-commerce</a>
+        <a href="chapitre-8.html" class="nav-link"><span class="chapter-num">8</span> Cybersécurité</a>
+        <a href="chapitre-9.html" class="nav-link"><span class="chapter-num">9</span> Intelligence Artificielle</a>
+        <a href="chapitre-10.html" class="nav-link"><span class="chapter-num">10</span> Projet Final</a>
+        <div class="nav-section-title">Compléments</div>
+        <a href="bonus.html" class="nav-link"><span class="chapter-num">★</span> Bonus</a>
+      </nav>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="menu-toggle" aria-label="Menu">☰</button><div class="breadcrumb">Module 7 / <span>E-commerce</span></div></div>
+        <div class="topbar-right"><button class="theme-toggle" aria-label="Thème">🌙</button></div>
+      </header>
+      <div class="progress-container"><div class="progress-bar-wrapper"><div class="progress-label"><span class="progress-text">0 / 11</span><span class="progress-percent">0%</span></div><div class="progress-bar"><div class="progress-fill chapter-progress-fill"></div></div></div></div>
+      <main class="page-content">
+        <span class="badge badge-accent">Module 7</span>
+        <h1>Automatisation E-commerce</h1>
+        <p class="lead">Automatisez le traitement des commandes : notification, facturation et suivi — de Shopify, WooCommerce ou Stripe vers vos outils.</p>
+
+        <div class="schema">
+          <div class="schema-flow">
+            <div class="schema-node trigger">Nouvelle commande</div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node transform">n8n</div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node action">Email confirmation</div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node output">Facture PDF</div>
+          </div>
+        </div>
+
+        <h2>Plateformes supportées</h2>
+        <div class="card-grid">
+          <div class="card"><h3>🛍️ Shopify</h3><p>Nœud natif n8n. Trigger « Order Created ». Accès complet aux données commande, client, produits.</p></div>
+          <div class="card"><h3>🛒 WooCommerce</h3><p>Via webhook ou nœud WooCommerce. Idéal pour les sites WordPress.</p></div>
+          <div class="card"><h3>💳 Stripe</h3><p>Trigger « Payment Succeeded ». Parfait pour les paiements directs.</p></div>
+        </div>
+
+        <h2>Projet guidé : Commande Shopify → Email + Facture</h2>
+
+        <h3>Étape 1 — Trigger Shopify</h3>
+        <pre><code><span class="code-comment">// Nœud Shopify Trigger</span>
+Event: Order Created
+Credentials: Shopify API (clé + secret)</code></pre>
+
+        <h3>Étape 2 — Extraire les données</h3>
+        <pre><code><span class="code-comment">// Nœud Set</span>
+orderId    → {{ $json.id }}
+customer   → {{ $json.customer.first_name }} {{ $json.customer.last_name }}
+email      → {{ $json.customer.email }}
+total      → {{ $json.total_price }}
+currency   → {{ $json.currency }}
+items      → {{ $json.line_items.map(i => i.title).join(", ") }}
+orderDate  → {{ $json.created_at }}</code></pre>
+
+        <h3>Étape 3 — Email de confirmation</h3>
+        <pre><code><span class="code-comment">// Nœud Gmail ou Brevo</span>
+To: {{ $json.email }}
+Subject: Confirmation commande #{{ $json.orderId }}
+Body: Bonjour {{ $json.customer }},
+      Merci pour votre commande de {{ $json.total }}{{ $json.currency }}.
+      Articles : {{ $json.items }}</code></pre>
+
+        <h3>Étape 4 — Générer la facture</h3>
+        <pre><code><span class="code-comment">// Nœud HTTP Request vers un service PDF</span>
+<span class="code-comment">// Ou Google Docs template + PDF conversion</span>
+Method: POST
+URL: https://api.pdfmonkey.io/api/v1/documents
+Body: {
+  "document": {
+    "order_id": "{{ $json.orderId }}",
+    "customer": "{{ $json.customer }}",
+    "total": "{{ $json.total }}",
+    "items": "{{ $json.items }}"
+  }
+}</code></pre>
+
+        <h2>Intégration Stripe</h2>
+        <pre><code><span class="code-comment">// Nœud Stripe Trigger</span>
+Event: payment_intent.succeeded
+
+<span class="code-comment">// Données disponibles :</span>
+amount     → {{ $json.amount / 100 }}  <span class="code-comment">// Stripe utilise les centimes</span>
+email      → {{ $json.receipt_email }}
+currency   → {{ $json.currency }}</code></pre>
+
+        <h2 id="exercice">Exercice pratique</h2>
+        <div class="box box-exercise">
+          <div class="box-title">📝 Exercice — Workflow commande simulée</div>
+          <ol>
+            <li>Créez un workflow : Webhook → Set → IF (total > 50) → Email → Slack</li>
+            <li>Simulez une commande :
+              <pre style="margin-top:.5rem;"><code>curl -X POST http://localhost:5678/webhook/order \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "ORD-001",
+    "customer": {"first_name":"Paul","last_name":"Martin","email":"paul@test.com"},
+    "total_price": "75.00",
+    "currency": "EUR",
+    "line_items": [{"title":"T-shirt"},{"title":"Casquette"}]
+  }'</code></pre>
+            </li>
+            <li>Si total > 50€ : envoyer notification « Grosse commande ! » sur Slack</li>
+            <li>Sinon : notification standard</li>
+            <li>Logger la commande dans Google Sheets (HTTP Request ou nœud natif)</li>
+          </ol>
+        </div>
+
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header">✅ Correction<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <p><strong>IF Node :</strong> <code>{{ parseFloat($json.total) > 50 }}</code></p>
+              <p><strong>True :</strong> Slack → <code>🎉 Grosse commande ! {{ $json.customer }} — {{ $json.total }}€</code></p>
+              <p><strong>False :</strong> Slack → <code>📦 Nouvelle commande {{ $json.orderId }} — {{ $json.total }}€</code></p>
+            </div></div>
+          </div>
+        </div>
+
+        <h2 id="quiz">Quiz</h2>
+        <div class="quiz" data-correct="a" data-explain="Stripe stocke les montants en centimes. Il faut diviser par 100 pour obtenir le montant en euros.">
+          <div class="quiz-question">Stripe renvoie un montant de 7500 pour 75€. Que faire ?</div>
+          <ul class="quiz-options">
+            <li class="quiz-option" data-value="a"><input type="radio" hidden> Diviser par 100</li>
+            <li class="quiz-option" data-value="b"><input type="radio" hidden> Multiplier par 100</li>
+            <li class="quiz-option" data-value="c"><input type="radio" hidden> Utiliser tel quel</li>
+            <li class="quiz-option" data-value="d"><input type="radio" hidden> Soustraire 100</li>
+          </ul>
+          <button class="quiz-btn">Vérifier</button>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="summary-box"><h3>📋 Résumé</h3>
+          <ul><li>Shopify, WooCommerce et Stripe ont des triggers natifs</li><li>Mapper les données commande avec Set</li><li>Automatiser emails, factures et notifications</li><li>Attention aux unités (centimes Stripe, devises)</li></ul>
+        </div>
+
+        <button class="btn btn-primary btn-complete-chapter" style="margin-top:1rem;">Marquer comme complété</button>
+        <nav class="chapter-nav">
+          <a href="chapitre-6.html" class="btn btn-outline">← Module 6</a>
+          <a href="chapitre-8.html" class="btn btn-primary">Module 8 : Cybersécurité →</a>
+        </nav>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

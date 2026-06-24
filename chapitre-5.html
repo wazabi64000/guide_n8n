@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 5 — Manipulation des données</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><div class="logo-icon">n8n</div><span>Cours n8n</span></a></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Formation</div>
+        <a href="index.html" class="nav-link"><span class="chapter-num">🏠</span> Accueil</a>
+        <a href="chapitre-1.html" class="nav-link"><span class="chapter-num">1</span> Introduction</a>
+        <a href="chapitre-2.html" class="nav-link"><span class="chapter-num">2</span> Installation</a>
+        <a href="chapitre-3.html" class="nav-link"><span class="chapter-num">3</span> Interface</a>
+        <a href="chapitre-4.html" class="nav-link"><span class="chapter-num">4</span> Premier Workflow</a>
+        <a href="chapitre-5.html" class="nav-link active"><span class="chapter-num">5</span> Données & Expressions</a>
+        <a href="chapitre-6.html" class="nav-link"><span class="chapter-num">6</span> Marketing</a>
+        <a href="chapitre-7.html" class="nav-link"><span class="chapter-num">7</span> E-commerce</a>
+        <a href="chapitre-8.html" class="nav-link"><span class="chapter-num">8</span> Cybersécurité</a>
+        <a href="chapitre-9.html" class="nav-link"><span class="chapter-num">9</span> Intelligence Artificielle</a>
+        <a href="chapitre-10.html" class="nav-link"><span class="chapter-num">10</span> Projet Final</a>
+        <div class="nav-section-title">Compléments</div>
+        <a href="bonus.html" class="nav-link"><span class="chapter-num">★</span> Bonus</a>
+      </nav>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="menu-toggle" aria-label="Menu">☰</button><div class="breadcrumb">Module 5 / <span>Données & Expressions</span></div></div>
+        <div class="topbar-right"><button class="theme-toggle" aria-label="Thème">🌙</button></div>
+      </header>
+      <div class="progress-container"><div class="progress-bar-wrapper"><div class="progress-label"><span class="progress-text">0 / 11</span><span class="progress-percent">0%</span></div><div class="progress-bar"><div class="progress-fill chapter-progress-fill"></div></div></div></div>
+      <main class="page-content">
+        <span class="badge badge-accent">Module 5</span>
+        <h1>Manipulation des données</h1>
+        <p class="lead">Les données circulent entre les nœuds sous forme de JSON. Maîtriser les expressions est essentiel pour créer des workflows puissants.</p>
+
+        <h2 id="json">Le format JSON dans n8n</h2>
+        <p>Chaque nœud reçoit et produit des <strong>items</strong>. Un item contient un objet JSON :</p>
+        <pre><code>{
+  "json": {
+    "name": "Alice",
+    "email": "alice@example.com",
+    "age": 28
+  }
+}</code></pre>
+        <p>Les données du nœud précédent sont accessibles via <code>$json</code> dans les expressions.</p>
+
+        <h2 id="expressions">Les expressions n8n</h2>
+        <p>Syntaxe : <code>{{ expression }}</code> — évaluée au moment de l'exécution.</p>
+
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Expression</th><th>Description</th><th>Exemple de résultat</th></tr></thead>
+            <tbody>
+              <tr><td><code>{{ $json.name }}</code></td><td>Champ du nœud courant</td><td>Alice</td></tr>
+              <tr><td><code>{{ $json.email }}</code></td><td>Email du contact</td><td>alice@example.com</td></tr>
+              <tr><td><code>{{ $now }}</code></td><td>Date/heure actuelle</td><td>2026-06-22T14:30:00</td></tr>
+              <tr><td><code>{{ $now.toISO() }}</code></td><td>Date format ISO</td><td>2026-06-22T14:30:00.000Z</td></tr>
+              <tr><td><code>{{ $('Webhook').item.json.body }}</code></td><td>Données d'un nœud spécifique</td><td>objet body</td></tr>
+              <tr><td><code>{{ $json.name.toUpperCase() }}</code></td><td>Méthode JavaScript</td><td>ALICE</td></tr>
+              <tr><td><code>{{ $json.price * 1.2 }}</code></td><td>Calcul mathématique</td><td>120</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="variables">Variables utiles</h2>
+        <div class="card-grid">
+          <div class="card"><h3>$json</h3><p>Données JSON de l'item courant</p></div>
+          <div class="card"><h3>$input</h3><p>Tous les items en entrée du nœud</p></div>
+          <div class="card"><h3>$now</h3><p>Date/heure actuelle (objet Luxon)</p></div>
+          <div class="card"><h3>$env</h3><p>Variables d'environnement</p></div>
+          <div class="card"><h3>$workflow</h3><p>Infos sur le workflow (id, name)</p></div>
+          <div class="card"><h3>$execution</h3><p>Infos sur l'exécution en cours</p></div>
+        </div>
+
+        <h2 id="transformation">Transformations courantes</h2>
+        <pre><code><span class="code-comment">// Concaténer du texte</span>
+{{ "Bonjour " + $json.name + " !" }}
+
+<span class="code-comment">// Condition ternaire</span>
+{{ $json.age >= 18 ? "Majeur" : "Mineur" }}
+
+<span class="code-comment">// Formatter une date</span>
+{{ $now.toFormat('dd/MM/yyyy HH:mm') }}
+
+<span class="code-comment">// Accéder à un tableau</span>
+{{ $json.tags[0] }}
+
+<span class="code-comment">// Longueur d'une chaîne</span>
+{{ $json.description.length }}</code></pre>
+
+        <h2 id="exercice">Exercice pratique</h2>
+        <div class="box box-exercise">
+          <div class="box-title">📝 Exercice — Transformer des données client</div>
+          <p>À partir de ce JSON reçu par webhook :</p>
+          <pre><code>{"firstName":"Jean","lastName":"Dupont","email":"jean.dupont@mail.com","orderTotal":89.99}</code></pre>
+          <p>Utilisez un nœud <strong>Set</strong> pour créer ces champs :</p>
+          <ol>
+            <li><code>fullName</code> → prénom + espace + nom</li>
+            <li><code>emailDomain</code> → partie après le @ de l'email</li>
+            <li><code>totalTTC</code> → orderTotal × 1.20 (TVA 20%)</li>
+            <li><code>processedAt</code> → date actuelle au format ISO</li>
+            <li><code>orderLabel</code> → "Commande de [fullName] : [totalTTC]€"</li>
+          </ol>
+        </div>
+
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header">✅ Correction<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <pre><code>fullName     → {{ $json.firstName + " " + $json.lastName }}
+emailDomain  → {{ $json.email.split("@")[1] }}
+totalTTC     → {{ ($json.orderTotal * 1.2).toFixed(2) }}
+processedAt  → {{ $now.toISO() }}
+orderLabel   → {{ "Commande de " + $json.firstName + " " + $json.lastName + " : " + ($json.orderTotal * 1.2).toFixed(2) + "€" }}</code></pre>
+              <p>Résultat attendu :</p>
+              <pre><code>{
+  "fullName": "Jean Dupont",
+  "emailDomain": "mail.com",
+  "totalTTC": "107.99",
+  "processedAt": "2026-06-22T14:30:00.000Z",
+  "orderLabel": "Commande de Jean Dupont : 107.99€"
+}</code></pre>
+            </div></div>
+          </div>
+        </div>
+
+        <h2 id="quiz">Quiz</h2>
+        <div class="quiz" data-correct="b" data-explain="$json donne accès aux données JSON de l'item courant dans le nœud.">
+          <div class="quiz-question">Comment accéder au champ "email" de l'item courant ?</div>
+          <ul class="quiz-options">
+            <li class="quiz-option" data-value="a"><input type="radio" hidden> {{ email }}</li>
+            <li class="quiz-option" data-value="b"><input type="radio" hidden> {{ $json.email }}</li>
+            <li class="quiz-option" data-value="c"><input type="radio" hidden> {{ $data.email }}</li>
+            <li class="quiz-option" data-value="d"><input type="radio" hidden> {{ json.email }}</li>
+          </ul>
+          <button class="quiz-btn">Vérifier</button>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="box box-tip"><div class="box-title">💡 Bonnes pratiques</div>
+          <ul><li>Utilisez l'éditeur d'expressions (icône ⚡) pour tester en direct</li><li>Préférez Set pour les transformations simples, Code pour la logique complexe</li><li>Vérifiez les types : un nombre en string ne calcule pas correctement</li><li>Utilisez <code>.toFixed(2)</code> pour les montants monétaires</li></ul>
+        </div>
+
+        <div class="summary-box"><h3>📋 Résumé</h3>
+          <ul><li>Les données circulent en JSON entre les nœuds</li><li>Expressions {{ }} pour accéder et transformer les données</li><li>$json, $now, $input sont les variables les plus utilisées</li><li>JavaScript est disponible dans les expressions et le nœud Code</li></ul>
+        </div>
+
+        <button class="btn btn-primary btn-complete-chapter" style="margin-top:1rem;">Marquer comme complété</button>
+        <nav class="chapter-nav">
+          <a href="chapitre-4.html" class="btn btn-outline">← Module 4</a>
+          <a href="chapitre-6.html" class="btn btn-primary">Module 6 : Marketing →</a>
+        </nav>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

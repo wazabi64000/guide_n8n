@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 4 — Premier Workflow</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><div class="logo-icon">n8n</div><span>Cours n8n</span></a></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Formation</div>
+        <a href="index.html" class="nav-link"><span class="chapter-num">🏠</span> Accueil</a>
+        <a href="chapitre-1.html" class="nav-link"><span class="chapter-num">1</span> Introduction</a>
+        <a href="chapitre-2.html" class="nav-link"><span class="chapter-num">2</span> Installation</a>
+        <a href="chapitre-3.html" class="nav-link"><span class="chapter-num">3</span> Interface</a>
+        <a href="chapitre-4.html" class="nav-link active"><span class="chapter-num">4</span> Premier Workflow</a>
+        <a href="chapitre-5.html" class="nav-link"><span class="chapter-num">5</span> Données & Expressions</a>
+        <a href="chapitre-6.html" class="nav-link"><span class="chapter-num">6</span> Marketing</a>
+        <a href="chapitre-7.html" class="nav-link"><span class="chapter-num">7</span> E-commerce</a>
+        <a href="chapitre-8.html" class="nav-link"><span class="chapter-num">8</span> Cybersécurité</a>
+        <a href="chapitre-9.html" class="nav-link"><span class="chapter-num">9</span> Intelligence Artificielle</a>
+        <a href="chapitre-10.html" class="nav-link"><span class="chapter-num">10</span> Projet Final</a>
+        <div class="nav-section-title">Compléments</div>
+        <a href="bonus.html" class="nav-link"><span class="chapter-num">★</span> Bonus</a>
+      </nav>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="menu-toggle" aria-label="Menu">☰</button><div class="breadcrumb">Module 4 / <span>Premier Workflow</span></div></div>
+        <div class="topbar-right"><button class="theme-toggle" aria-label="Thème">🌙</button></div>
+      </header>
+      <div class="progress-container"><div class="progress-bar-wrapper"><div class="progress-label"><span class="progress-text">0 / 11</span><span class="progress-percent">0%</span></div><div class="progress-bar"><div class="progress-fill chapter-progress-fill"></div></div></div></div>
+      <main class="page-content">
+        <span class="badge badge-accent">Module 4</span>
+        <h1>Premier Workflow complet</h1>
+        <p class="lead">Construisons ensemble un workflow API complet : recevoir des données via webhook, les transformer, et renvoyer une réponse.</p>
+
+        <div class="schema">
+          <div class="schema-flow">
+            <div class="schema-node trigger">Webhook<br><small>POST /api/contact</small></div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node transform">Set Node<br><small>Formater données</small></div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node transform">Function<br><small>Validation JS</small></div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node output">Respond<br><small>JSON 200</small></div>
+          </div>
+        </div>
+
+        <h2>Étape 1 — Webhook (Trigger)</h2>
+        <p>Le nœud <strong>Webhook</strong> crée une URL qui écoute les requêtes HTTP entrantes.</p>
+        <ol>
+          <li>Ajoutez un nœud <code>Webhook</code></li>
+          <li>Méthode : <strong>POST</strong></li>
+          <li>Path : <code>contact</code></li>
+          <li>Response Mode : <strong>Using 'Respond to Webhook' Node</strong></li>
+        </ol>
+        <p>URL générée : <code>http://localhost:5678/webhook/contact</code></p>
+
+        <h2>Étape 2 — Set Node (Transformation)</h2>
+        <p>Le nœud <strong>Set</strong> (Edit Fields) permet de créer ou modifier des champs.</p>
+        <pre><code><span class="code-comment">// Champs à ajouter dans Set :</span>
+name  → {{ $json.body.name }}
+email → {{ $json.body.email }}
+date  → {{ $now.toISO() }}
+source → "webhook-contact"</code></pre>
+        <p>Les expressions <code>{{ }}</code> accèdent aux données des nœuds précédents.</p>
+
+        <h2>Étape 3 — Function Node (Code JavaScript)</h2>
+        <p>Le nœud <strong>Code</strong> (anciennement Function) exécute du JavaScript personnalisé.</p>
+        <pre><code><span class="code-comment">// Validation de l'email</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">const</span> item <span class="code-keyword">of</span> $input.all()) {
+  <span class="code-keyword">const</span> email = item.json.email;
+  <span class="code-keyword">const</span> isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  <span class="code-keyword">if</span> (!isValid) {
+    item.json.error = <span class="code-string">'Email invalide'</span>;
+    item.json.valid = <span class="code-keyword">false</span>;
+  } <span class="code-keyword">else</span> {
+    item.json.valid = <span class="code-keyword">true</span>;
+    item.json.message = <span class="code-string">`Merci ${item.json.name} !`</span>;
+  }
+}
+<span class="code-keyword">return</span> $input.all();</code></pre>
+
+        <h2>Étape 4 — Respond to Webhook</h2>
+        <p>Renvoie une réponse HTTP au client qui a appelé le webhook.</p>
+        <pre><code><span class="code-comment">// Configuration Respond to Webhook :</span>
+Response Code: 200
+Response Body: {
+  "success": {{ $json.valid }},
+  "message": "{{ $json.message || $json.error }}"
+}</code></pre>
+
+        <h2 id="exercice">Exercice guidé complet</h2>
+        <div class="box box-exercise">
+          <div class="box-title">📝 Exercice — API de contact</div>
+          <ol>
+            <li>Créez le workflow avec les 4 nœuds ci-dessus</li>
+            <li>Activez le workflow (toggle en haut à droite)</li>
+            <li>Testez avec curl :
+              <pre style="margin-top:.5rem;"><code>curl -X POST http://localhost:5678/webhook/contact \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Alice","email":"alice@test.com"}'</code></pre>
+            </li>
+            <li>Vérifiez la réponse JSON</li>
+            <li>Testez avec un email invalide : <code>"email":"pas-un-email"</code></li>
+            <li>Consultez l'exécution dans l'onglet Executions</li>
+          </ol>
+        </div>
+
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header">✅ Correction — Réponses attendues<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <p><strong>Email valide :</strong></p>
+              <pre><code>{"success": true, "message": "Merci Alice !"}</code></pre>
+              <p><strong>Email invalide :</strong></p>
+              <pre><code>{"success": false, "message": "Email invalide"}</code></pre>
+            </div></div>
+          </div>
+        </div>
+
+        <h2 id="quiz">Quiz</h2>
+        <div class="quiz" data-correct="a" data-explain="Le Set Node permet de créer et modifier des champs de données sans écrire de code.">
+          <div class="quiz-question">Quel nœud utilise-t-on pour ajouter un champ sans code ?</div>
+          <ul class="quiz-options">
+            <li class="quiz-option" data-value="a"><input type="radio" hidden> Set (Edit Fields)</li>
+            <li class="quiz-option" data-value="b"><input type="radio" hidden> Respond to Webhook</li>
+            <li class="quiz-option" data-value="c"><input type="radio" hidden> Manual Trigger</li>
+            <li class="quiz-option" data-value="d"><input type="radio" hidden> Sticky Note</li>
+          </ul>
+          <button class="quiz-btn">Vérifier</button>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="box box-tip"><div class="box-title">💡 Bonnes pratiques</div>
+          <ul><li>Toujours activer le workflow pour que le webhook fonctionne</li><li>Utiliser « Respond to Webhook » pour contrôler la réponse HTTP</li><li>Tester avec curl ou Postman avant de connecter une vraie app</li><li>Séparer validation (Function) et formatage (Set) pour la lisibilité</li></ul>
+        </div>
+
+        <div class="summary-box"><h3>📋 Résumé</h3>
+          <ul><li>Webhook = point d'entrée HTTP</li><li>Set = transformation simple sans code</li><li>Function/Code = logique JavaScript avancée</li><li>Respond = réponse HTTP au client</li></ul>
+        </div>
+
+        <button class="btn btn-primary btn-complete-chapter" style="margin-top:1rem;">Marquer comme complété</button>
+        <nav class="chapter-nav">
+          <a href="chapitre-3.html" class="btn btn-outline">← Module 3</a>
+          <a href="chapitre-5.html" class="btn btn-primary">Module 5 : Données →</a>
+        </nav>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

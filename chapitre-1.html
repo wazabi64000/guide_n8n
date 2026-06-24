@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 1 — Introduction à n8n</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><div class="logo-icon">n8n</div><span>Cours n8n</span></a></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Formation</div>
+        <a href="index.html" class="nav-link"><span class="chapter-num">🏠</span> Accueil</a>
+        <a href="chapitre-1.html" class="nav-link active"><span class="chapter-num">1</span> Introduction</a>
+        <a href="chapitre-2.html" class="nav-link"><span class="chapter-num">2</span> Installation</a>
+        <a href="chapitre-3.html" class="nav-link"><span class="chapter-num">3</span> Interface</a>
+        <a href="chapitre-4.html" class="nav-link"><span class="chapter-num">4</span> Premier Workflow</a>
+        <a href="chapitre-5.html" class="nav-link"><span class="chapter-num">5</span> Données & Expressions</a>
+        <a href="chapitre-6.html" class="nav-link"><span class="chapter-num">6</span> Marketing</a>
+        <a href="chapitre-7.html" class="nav-link"><span class="chapter-num">7</span> E-commerce</a>
+        <a href="chapitre-8.html" class="nav-link"><span class="chapter-num">8</span> Cybersécurité</a>
+        <a href="chapitre-9.html" class="nav-link"><span class="chapter-num">9</span> Intelligence Artificielle</a>
+        <a href="chapitre-10.html" class="nav-link"><span class="chapter-num">10</span> Projet Final</a>
+        <div class="nav-section-title">Compléments</div>
+        <a href="bonus.html" class="nav-link"><span class="chapter-num">★</span> Bonus</a>
+      </nav>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="menu-toggle" aria-label="Menu">☰</button><div class="breadcrumb">Module 1 / <span>Introduction à n8n</span></div></div>
+        <div class="topbar-right"><button class="theme-toggle" aria-label="Thème">🌙</button></div>
+      </header>
+      <div class="progress-container"><div class="progress-bar-wrapper"><div class="progress-label"><span class="progress-text">0 / 11 modules</span><span class="progress-percent">0%</span></div><div class="progress-bar"><div class="progress-fill chapter-progress-fill"></div></div></div></div>
+      <main class="page-content">
+        <span class="badge badge-accent">Module 1</span>
+        <h1>Introduction à n8n</h1>
+        <p class="lead">Découvrez l'outil d'automatisation open-source qui permet de connecter vos applications sans écrire des centaines de lignes de code.</p>
+
+        <h2 id="quest-ce">Qu'est-ce que n8n ?</h2>
+        <p><strong>n8n</strong> (prononcé « n-eight-n ») est une plateforme d'<strong>automatisation de workflows</strong> open-source. Elle permet de relier des applications entre elles (Gmail, Slack, Shopify, bases de données…) via une interface visuelle de type « glisser-déposer ».</p>
+        <p>Concrètement, n8n remplace les tâches répétitives : envoyer un email quand un formulaire est soumis, synchroniser un CRM avec une feuille de calcul, analyser une URL avec VirusTotal… Le tout <strong>sans développer une application complète</strong>.</p>
+
+        <div class="schema">
+          <p style="margin-bottom:1rem;font-weight:600;">Schéma : le rôle de n8n</p>
+          <div class="schema-flow">
+            <div class="schema-node trigger">Application A<br><small>ex: Formulaire</small></div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node transform" style="border-color:var(--accent);color:var(--accent);">n8n<br><small>Orchestrateur</small></div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node action">Application B<br><small>ex: Email / CRM</small></div>
+          </div>
+        </div>
+
+        <h2 id="pourquoi">Pourquoi n8n existe ?</h2>
+        <p>Les développeurs et les équipes métier perdent un temps considérable sur des tâches manuelles : copier des données d'un outil à l'autre, déclencher des actions à la main, surveiller des événements. n8n a été créé pour :</p>
+        <ul>
+          <li><strong>Automatiser</strong> ces flux de travail sans tout recoder</li>
+          <li><strong>Centraliser</strong> les intégrations dans un seul outil</li>
+          <li><strong>Donner le contrôle</strong> : code open-source, auto-hébergement possible</li>
+          <li><strong>Permettre le low-code ET le code</strong> : expressions JavaScript quand nécessaire</li>
+        </ul>
+
+        <h2 id="comparaison">n8n vs Zapier vs Make</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Critère</th><th>n8n</th><th>Zapier</th><th>Make</th></tr></thead>
+            <tbody>
+              <tr><td>Modèle</td><td>Open-source</td><td>SaaS propriétaire</td><td>SaaS propriétaire</td></tr>
+              <tr><td>Auto-hébergement</td><td>✅ Oui</td><td>❌ Non</td><td>❌ Non</td></tr>
+              <tr><td>Prix</td><td>Gratuit (self-hosted)</td><td>Abonnement mensuel</td><td>Abonnement mensuel</td></tr>
+              <tr><td>Code personnalisé</td><td>✅ JavaScript natif</td><td>⚠️ Limité</td><td>⚠️ Limité</td></tr>
+              <tr><td>Complexité</td><td>Intermédiaire</td><td>Très simple</td><td>Intermédiaire</td></tr>
+              <tr><td>Idéal pour</td><td>Devs, équipes tech</td><td>Non-devs, débutants</td><td>Automatisations visuelles</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-grid">
+          <div class="card"><h3>✅ Avantages</h3><ul>
+            <li>Gratuit en self-hosted</li><li>400+ intégrations</li><li>Workflows complexes (branches, boucles)</li><li>Données hébergées chez vous</li><li>Communauté active</li>
+          </ul></div>
+          <div class="card"><h3>⚠️ Inconvénients</h3><ul>
+            <li>Courbe d'apprentissage</li><li>Maintenance serveur (self-hosted)</li><li>Moins « plug-and-play » que Zapier</li><li>Documentation parfois technique</li>
+          </ul></div>
+        </div>
+
+        <h2 id="cas-usage">Cas d'utilisation réels</h2>
+        <div class="accordion">
+          <div class="accordion-item"><button class="accordion-header">Marketing — Capture de leads<span class="icon">▼</span></button><div class="accordion-body"><div class="accordion-content">Un prospect remplit un formulaire Facebook → n8n récupère les données → les envoie dans HubSpot → déclenche un email de bienvenue via Brevo.</div></div></div>
+          <div class="accordion-item"><button class="accordion-header">E-commerce — Nouvelle commande<span class="icon">▼</span></button><div class="accordion-body"><div class="accordion-content">Shopify notifie n8n d'une commande → génération de facture PDF → envoi par email → mise à jour du stock dans Google Sheets.</div></div></div>
+          <div class="accordion-item"><button class="accordion-header">Cybersécurité — Scan d'URL<span class="icon">▼</span></button><div class="accordion-body"><div class="accordion-content">Un analyste soumet une URL suspecte → n8n interroge VirusTotal → compile un rapport → l'envoie sur Slack.</div></div></div>
+          <div class="accordion-item"><button class="accordion-header">RH — Onboarding<span class="icon">▼</span></button><div class="accordion-body"><div class="accordion-content">Nouvel employé dans le SIRH → création compte Google Workspace → ajout Slack → envoi du kit de bienvenue.</div></div></div>
+        </div>
+
+        <h2 id="concepts">Concepts fondamentaux</h2>
+        <div class="card-grid">
+          <div class="card"><h3>Workflow</h3><p>Ensemble de nœuds connectés formant une automatisation complète. C'est votre « programme » visuel.</p></div>
+          <div class="card"><h3>Node (Nœud)</h3><p>Brique élémentaire : un trigger, une action ou une transformation. Chaque nœud fait une chose précise.</p></div>
+          <div class="card"><h3>Trigger</h3><p>Point de départ : webhook, cron (planification), événement d'une app. Déclenche le workflow.</p></div>
+          <div class="card"><h3>Action</h3><p>Opération exécutée : envoyer un email, créer un enregistrement, appeler une API.</p></div>
+          <div class="card"><h3>Credentials</h3><p>Identifiants sécurisés (clés API, OAuth) stockés de manière chiffrée dans n8n.</p></div>
+          <div class="card"><h3>Webhook</h3><p>URL unique qui reçoit des données HTTP (POST/GET) et démarre un workflow.</p></div>
+          <div class="card"><h3>Exécution</h3><p>Chaque lancement d'un workflow. Consultable dans l'onglet Executions avec logs détaillés.</p></div>
+        </div>
+
+        <div class="schema">
+          <p style="margin-bottom:1rem;font-weight:600;">Anatomie d'un workflow</p>
+          <div class="schema-flow">
+            <div class="schema-node trigger">Trigger<br><small>Webhook / Cron</small></div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node transform">Transform<br><small>Set / Function</small></div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node action">Action<br><small>HTTP / Email</small></div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node output">Output<br><small>Respond / Slack</small></div>
+          </div>
+        </div>
+
+        <h2 id="exercice">Exercice pratique</h2>
+        <div class="box box-exercise">
+          <div class="box-title">📝 Exercice — Créer un workflow simple</div>
+          <p><strong>Objectif :</strong> Comprendre la logique d'un workflow avant de l'installer.</p>
+          <ol>
+            <li>Sur papier ou dans un éditeur, dessinez un workflow avec ces étapes : <em>Formulaire contact → Vérification email → Envoi notification Slack</em></li>
+            <li>Identifiez le <strong>trigger</strong>, les <strong>transformations</strong> et les <strong>actions</strong></li>
+            <li>Listez les <strong>credentials</strong> nécessaires</li>
+            <li>Prévoyez ce qui se passe si l'email est invalide (branche alternative)</li>
+          </ol>
+        </div>
+
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header">✅ Correction de l'exercice<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <div class="schema-flow" style="margin:1rem 0;">
+                <div class="schema-node trigger">Webhook<br><small>Formulaire</small></div><span class="schema-arrow">→</span>
+                <div class="schema-node transform">IF Node<br><small>Email valide ?</small></div><span class="schema-arrow">→</span>
+                <div class="schema-node action">Slack<br><small>Notification</small></div>
+              </div>
+              <p><strong>Trigger :</strong> Webhook (reçoit les données du formulaire)</p>
+              <p><strong>Transformation :</strong> Nœud IF pour valider le format email avec une expression</p>
+              <p><strong>Action :</strong> Nœud Slack « Send Message »</p>
+              <p><strong>Credentials :</strong> Aucun pour le webhook ; token Slack API pour Slack</p>
+              <p><strong>Branche alternative :</strong> Si email invalide → nœud « Respond to Webhook » avec erreur 400</p>
+            </div></div>
+          </div>
+        </div>
+
+        <h2 id="quiz">Quiz</h2>
+        <div class="quiz" data-correct="b" data-explain="n8n est open-source et peut être auto-hébergé, contrairement à Zapier et Make qui sont des SaaS.">
+          <div class="quiz-question">1. Quelle est la principale différence entre n8n et Zapier ?</div>
+          <ul class="quiz-options">
+            <li class="quiz-option" data-value="a"><input type="radio" name="q1" hidden> Zapier est open-source</li>
+            <li class="quiz-option" data-value="b"><input type="radio" name="q1" hidden> n8n peut être auto-hébergé gratuitement</li>
+            <li class="quiz-option" data-value="c"><input type="radio" name="q1" hidden> n8n n'a pas de nœuds</li>
+            <li class="quiz-option" data-value="d"><input type="radio" name="q1" hidden> Zapier utilise JavaScript</li>
+          </ul>
+          <button class="quiz-btn">Vérifier</button>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz" data-correct="c" data-explain="Le trigger est le point d'entrée qui démarre l'exécution du workflow.">
+          <div class="quiz-question">2. Quel élément déclenche un workflow ?</div>
+          <ul class="quiz-options">
+            <li class="quiz-option" data-value="a"><input type="radio" name="q2" hidden> Un Credential</li>
+            <li class="quiz-option" data-value="b"><input type="radio" name="q2" hidden> Une Exécution</li>
+            <li class="quiz-option" data-value="c"><input type="radio" name="q2" hidden> Un Trigger</li>
+            <li class="quiz-option" data-value="d"><input type="radio" name="q2" hidden> Un Template</li>
+          </ul>
+          <button class="quiz-btn">Vérifier</button>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <h2 id="bonnes-pratiques">Bonnes pratiques</h2>
+        <div class="box box-tip">
+          <div class="box-title">💡 Conseils pour débuter</div>
+          <ul>
+            <li>Commencez par des workflows simples (2-3 nœuds) avant les projets complexes</li>
+            <li>Nommez clairement vos workflows et nœuds</li>
+            <li>Testez chaque nœud individuellement avec « Execute Node »</li>
+            <li>Documentez vos workflows avec des notes (Sticky Notes dans n8n)</li>
+          </ul>
+        </div>
+
+        <div class="summary-box">
+          <h3>📋 Résumé du module</h3>
+          <ul>
+            <li>n8n est un outil d'automatisation open-source basé sur des workflows visuels</li>
+            <li>Il se distingue par l'auto-hébergement, le JavaScript natif et la gratuité</li>
+            <li>Les concepts clés : Workflow, Node, Trigger, Action, Credentials, Webhook, Exécution</li>
+            <li>Les cas d'usage couvrent le marketing, l'e-commerce, la cybersécurité et plus</li>
+          </ul>
+        </div>
+
+        <button class="btn btn-primary btn-complete-chapter" style="margin-top:1rem;">Marquer comme complété</button>
+        <nav class="chapter-nav">
+          <a href="index.html" class="btn btn-outline">← Accueil</a>
+          <a href="chapitre-2.html" class="btn btn-primary">Module 2 : Installation →</a>
+        </nav>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

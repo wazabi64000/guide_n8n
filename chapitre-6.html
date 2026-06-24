@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 6 — Marketing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar-overlay"></div>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><a href="index.html" class="sidebar-logo"><div class="logo-icon">n8n</div><span>Cours n8n</span></a></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Formation</div>
+        <a href="index.html" class="nav-link"><span class="chapter-num">🏠</span> Accueil</a>
+        <a href="chapitre-1.html" class="nav-link"><span class="chapter-num">1</span> Introduction</a>
+        <a href="chapitre-2.html" class="nav-link"><span class="chapter-num">2</span> Installation</a>
+        <a href="chapitre-3.html" class="nav-link"><span class="chapter-num">3</span> Interface</a>
+        <a href="chapitre-4.html" class="nav-link"><span class="chapter-num">4</span> Premier Workflow</a>
+        <a href="chapitre-5.html" class="nav-link"><span class="chapter-num">5</span> Données & Expressions</a>
+        <a href="chapitre-6.html" class="nav-link active"><span class="chapter-num">6</span> Marketing</a>
+        <a href="chapitre-7.html" class="nav-link"><span class="chapter-num">7</span> E-commerce</a>
+        <a href="chapitre-8.html" class="nav-link"><span class="chapter-num">8</span> Cybersécurité</a>
+        <a href="chapitre-9.html" class="nav-link"><span class="chapter-num">9</span> Intelligence Artificielle</a>
+        <a href="chapitre-10.html" class="nav-link"><span class="chapter-num">10</span> Projet Final</a>
+        <div class="nav-section-title">Compléments</div>
+        <a href="bonus.html" class="nav-link"><span class="chapter-num">★</span> Bonus</a>
+      </nav>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><button class="menu-toggle" aria-label="Menu">☰</button><div class="breadcrumb">Module 6 / <span>Marketing</span></div></div>
+        <div class="topbar-right"><button class="theme-toggle" aria-label="Thème">🌙</button></div>
+      </header>
+      <div class="progress-container"><div class="progress-bar-wrapper"><div class="progress-label"><span class="progress-text">0 / 11</span><span class="progress-percent">0%</span></div><div class="progress-bar"><div class="progress-fill chapter-progress-fill"></div></div></div></div>
+      <main class="page-content">
+        <span class="badge badge-accent">Module 6</span>
+        <h1>Automatisation Marketing</h1>
+        <p class="lead">Automatisez la capture et le traitement de vos leads marketing : de Facebook Lead Ads jusqu'à l'email de bienvenue.</p>
+
+        <div class="schema">
+          <div class="schema-flow">
+            <div class="schema-node trigger">Facebook Lead Ads</div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node transform">n8n Webhook</div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node action">CRM (HubSpot)</div>
+            <span class="schema-arrow">→</span>
+            <div class="schema-node output">Email Brevo</div>
+          </div>
+        </div>
+
+        <h2>Pourquoi automatiser le marketing ?</h2>
+        <p>Chaque minute compte quand un prospect montre de l'intérêt. L'automatisation permet de :</p>
+        <ul>
+          <li>Capturer les leads <strong>instantanément</strong> (24h/24)</li>
+          <li>Éliminer la saisie manuelle (erreurs, oublis)</li>
+          <li>Déclencher des emails personnalisés en quelques secondes</li>
+          <li>Centraliser les contacts dans un CRM</li>
+        </ul>
+
+        <h2>Projet : Facebook Lead Ads → n8n → Brevo</h2>
+
+        <h3>Étape 1 — Configurer le Webhook dans n8n</h3>
+        <ol>
+          <li>Créez un workflow avec un nœud <strong>Webhook</strong> (POST)</li>
+          <li>Activez le workflow et copiez l'URL du webhook</li>
+          <li>Dans Facebook Lead Ads, configurez l'intégration webhook avec cette URL</li>
+        </ol>
+
+        <h3>Étape 2 — Transformer les données du lead</h3>
+        <pre><code><span class="code-comment">// Nœud Set — Mapper les champs Facebook</span>
+firstName  → {{ $json.body.field_data[0].values[0] }}
+email      → {{ $json.body.field_data[1].values[0] }}
+phone      → {{ $json.body.field_data[2].values[0] }}
+source     → "facebook-lead-ads"
+capturedAt → {{ $now.toISO() }}</code></pre>
+
+        <h3>Étape 3 — Ajouter au CRM</h3>
+        <p>Utilisez le nœud <strong>HubSpot</strong> (ou HTTP Request vers votre CRM) :</p>
+        <pre><code>Operation: Create Contact
+Email: {{ $json.email }}
+First Name: {{ $json.firstName }}
+Phone: {{ $json.phone }}
+Lead Source: {{ $json.source }}</code></pre>
+
+        <h3>Étape 4 — Email de bienvenue via Brevo</h3>
+        <pre><code><span class="code-comment">// Nœud Brevo (Sendinblue)</span>
+To: {{ $json.email }}
+Template ID: 1
+Params: {
+  "PRENOM": "{{ $json.firstName }}"
+}</code></pre>
+
+        <div class="schema">
+          <p style="font-weight:600;margin-bottom:1rem;">Workflow complet</p>
+          <div class="schema-flow">
+            <div class="schema-node trigger">Webhook</div><span class="schema-arrow">→</span>
+            <div class="schema-node transform">Set</div><span class="schema-arrow">→</span>
+            <div class="schema-node transform">IF (email valide)</div><span class="schema-arrow">→</span>
+            <div class="schema-node action">HubSpot</div><span class="schema-arrow">→</span>
+            <div class="schema-node output">Brevo</div>
+          </div>
+        </div>
+
+        <h2 id="exercice">Exercice pratique</h2>
+        <div class="box box-exercise">
+          <div class="box-title">📝 Exercice — Simuler un lead Facebook</div>
+          <ol>
+            <li>Créez le workflow Webhook → Set → Brevo (ou HTTP Request simulant un email)</li>
+            <li>Simulez un lead avec curl :
+              <pre style="margin-top:.5rem;"><code>curl -X POST http://localhost:5678/webhook/lead \
+  -H "Content-Type: application/json" \
+  -d '{
+    "field_data": [
+      {"name":"first_name","values":["Marie"]},
+      {"name":"email","values":["marie@example.com"]},
+      {"name":"phone","values":["0612345678"]}
+    ]
+  }'</code></pre>
+            </li>
+            <li>Vérifiez que les données sont correctement mappées dans le nœud Set</li>
+            <li>Ajoutez un nœud IF pour filtrer les emails invalides</li>
+            <li>Ajoutez une notification Slack en cas de nouveau lead</li>
+          </ol>
+        </div>
+
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header">✅ Correction<span class="icon">▼</span></button>
+            <div class="accordion-body"><div class="accordion-content">
+              <p><strong>Nœud IF :</strong> Condition <code>{{ $json.email }}</code> matches regex <code>^[^\s@]+@[^\s@]+\.[^\s@]+$</code></p>
+              <p><strong>Branche true :</strong> HubSpot → Brevo → Slack</p>
+              <p><strong>Branche false :</strong> Log l'erreur ou notification admin</p>
+              <p><strong>Slack message :</strong> <code>Nouveau lead : {{ $json.firstName }} ({{ $json.email }}) via {{ $json.source }}</code></p>
+            </div></div>
+          </div>
+        </div>
+
+        <h2 id="quiz">Quiz</h2>
+        <div class="quiz" data-correct="c" data-explain="Le webhook permet à Facebook d'envoyer les données du lead à n8n en temps réel dès qu'un formulaire est rempli.">
+          <div class="quiz-question">Comment Facebook Lead Ads communique-t-il avec n8n ?</div>
+          <ul class="quiz-options">
+            <li class="quiz-option" data-value="a"><input type="radio" hidden> Par email</li>
+            <li class="quiz-option" data-value="b"><input type="radio" hidden> Par FTP</li>
+            <li class="quiz-option" data-value="c"><input type="radio" hidden> Par webhook HTTP</li>
+            <li class="quiz-option" data-value="d"><input type="radio" hidden> Par Bluetooth</li>
+          </ul>
+          <button class="quiz-btn">Vérifier</button>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="box box-tip"><div class="box-title">💡 Bonnes pratiques marketing</div>
+          <ul><li>Répondez aux leads en moins de 5 minutes (x21 plus de conversion)</li><li>Toujours valider les emails avant envoi</li><li>Taguer la source du lead pour le suivi ROI</li><li>Respecter le RGPD : consentement explicite requis</li></ul>
+        </div>
+
+        <div class="summary-box"><h3>📋 Résumé</h3>
+          <ul><li>Facebook Lead Ads → Webhook n8n → CRM → Email automatique</li><li>Mapper les champs avec Set et expressions</li><li>Valider les données avec IF avant traitement</li><li>Brevo/HubSpot ont des nœuds natifs dans n8n</li></ul>
+        </div>
+
+        <button class="btn btn-primary btn-complete-chapter" style="margin-top:1rem;">Marquer comme complété</button>
+        <nav class="chapter-nav">
+          <a href="chapitre-5.html" class="btn btn-outline">← Module 5</a>
+          <a href="chapitre-7.html" class="btn btn-primary">Module 7 : E-commerce →</a>
+        </nav>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
